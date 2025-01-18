@@ -1,6 +1,7 @@
 package com.bookstore_manager.backend.dataloader;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
@@ -19,6 +20,7 @@ import com.bookstore_manager.backend.repositories.CategoryRepository;
 import com.bookstore_manager.backend.repositories.UserRepository;
 
 @Component
+
 public class DataLoader {
 
     @Bean
@@ -26,7 +28,9 @@ public class DataLoader {
             AuthorRepository authorRepository,
             BookRepository bookRepository, UserRepository userRepository,
             BorrowRepository borrowRepository) {
+
         return args -> {
+
             List<Category> categories = categoryRepository.saveAll(List.of(
                     new Category("Fiction"),
                     new Category("Non-Fiction"),
@@ -35,7 +39,11 @@ public class DataLoader {
                     new Category("Biography"),
                     new Category("History"),
                     new Category("Mystery"),
-                    new Category("Self-Help")
+                    new Category("Self-Help"),
+                    new Category("Romance"),
+                    new Category("Horror"),
+                    new Category("Poetry"),
+                    new Category("Drama")
             ));
 
             List<Author> authors = authorRepository.saveAll(List.of(
@@ -46,42 +54,138 @@ public class DataLoader {
                     new Author("J.R.R. Tolkien", LocalDate.of(1892, 1, 3)),
                     new Author("Stephen King", LocalDate.of(1947, 9, 21)),
                     new Author("Yuval Noah Harari", LocalDate.of(1976, 2, 24)),
-                    new Author("Jane Austen", LocalDate.of(1775, 12, 16))
+                    new Author("Jane Austen", LocalDate.of(1775, 12, 16)),
+                    new Author("Gabriel García Márquez", LocalDate.of(1927, 3, 6)),
+                    new Author("Virginia Woolf", LocalDate.of(1882, 1, 25)),
+                    new Author("Ernest Hemingway", LocalDate.of(1899, 7, 21)),
+                    new Author("Paulo Coelho", LocalDate.of(1947, 8, 24))
             ));
 
             List<Book> books = bookRepository.saveAll(List.of(
-                    new Book("Harry Potter and the Philosopher's Stone", "9780747532699", 1997, 5, null, authors.get(0), categories.get(3)),
-                    new Book("Foundation", "9780553293357", 1951, 3, null, authors.get(1), categories.get(2)),
-                    new Book("1984", "9780451524935", 1949, 6, null, authors.get(2), categories.get(0)),
-                    new Book("Murder on the Orient Express", "9780062073501", 1934, 4, null, authors.get(3), categories.get(6)),
-                    new Book("The Hobbit", "9780547928227", 1937, 5, null, authors.get(4), categories.get(3)),
-                    new Book("The Shining", "9780307743657", 1977, 3, null, authors.get(5), categories.get(0)),
-                    new Book("Sapiens: A Brief History of Humankind", "9780099590088", 2011, 7, null, authors.get(6), categories.get(4)),
-                    new Book("Pride and Prejudice", "9781503290563", 1813, 8, null, authors.get(7), categories.get(0)),
-                    new Book("Animal Farm", "9780451526342", 1945, 6, null, authors.get(2), categories.get(0)),
-                    new Book("The Fellowship of the Ring", "9780261102354", 1954, 5, null, authors.get(4), categories.get(3)),
-                    new Book("It", "9780450411432", 1986, 4, null, authors.get(5), categories.get(0)),
-                    new Book("The Murder of Roger Ackroyd", "9780007527526", 1926, 3, null, authors.get(3), categories.get(6)),
-                    new Book("I, Robot", "9780553382563", 1950, 6, null, authors.get(1), categories.get(2)),
-                    new Book("Homo Deus: A Brief History of Tomorrow", "9780062464316", 2015, 5, null, authors.get(6), categories.get(4)),
-                    new Book("Emma", "9781503290488", 1815, 7, null, authors.get(7), categories.get(0)),
-                    new Book("The Two Towers", "9780261102361", 1954, 4, null, authors.get(4), categories.get(3)),
-                    new Book("Carrie", "9780385086950", 1974, 3, null, authors.get(5), categories.get(0)),
-                    new Book("Sense and Sensibility", "9781503290310", 1811, 8, null, authors.get(7), categories.get(0)),
-                    new Book("Harry Potter and the Chamber of Secrets", "9780747538493", 1998, 5, null, authors.get(0), categories.get(3)),
-                    new Book("The Return of the King", "9780261102378", 1955, 5, null, authors.get(4), categories.get(3))
+                    // Livros existentes
+
+                    new Book("Harry Potter and the Philosopher's Stone", "9780747532699", 1997, 5, "url1", authors.get(0), categories.get(3)),
+                    new Book("Foundation", "9780553293357", 1951, 3, "url2", authors.get(1), categories.get(2)),
+                    new Book("1984", "9780451524935", 1949, 6, "url3", authors.get(2), categories.get(0)),
+                    // Novos livros
+
+                    new Book("One Hundred Years of Solitude", "9780060883287", 1967, 4, "url4", authors.get(8), categories.get(0)),
+                    new Book("Mrs. Dalloway", "9780156628709", 1925, 3, "url5", authors.get(9), categories.get(0)),
+                    new Book("The Old Man and the Sea", "9780684801223", 1952, 5, "url6", authors.get(10), categories.get(0)),
+                    new Book("The Alchemist", "9780062315007", 1988, 7, "url7", authors.get(11), categories.get(8))
             ));
 
             List<User> users = userRepository.saveAll(List.of(
                     new User("John Doe", "john.doe@example.com", "123-456-7890"),
-                    new User("Jane Smith", "jane.smith@example.com", "987-654-3210")
+                    new User("Jane Smith", "jane.smith@example.com", "987-654-3210"),
+                    new User("Alice Johnson", "alice@example.com", "555-0123"),
+                    new User("Bob Wilson", "bob@example.com", "555-4567"),
+                    new User("Carol Brown", "carol@example.com", "555-8901")
             ));
 
-            List<Borrow> borrows = borrowRepository.saveAll(List.of(
-                    new Borrow(LocalDate.of(2025, 1, 1), LocalDate.of(2025, 1, 15), users.get(0), books.get(0), LocalDate.of(2025, 1, 10)),
-                    new Borrow(LocalDate.of(2025, 1, 5), LocalDate.of(2025, 1, 20), users.get(1), books.get(1), LocalDate.of(2025, 1, 20)),
-                    new Borrow(LocalDate.of(2025, 1, 10), LocalDate.of(2025, 1, 25), users.get(0), books.get(2), LocalDate.of(2025, 1, 26))
-            ));
+            // Empréstimos - Criando diferentes cenários
+            LocalDate today = LocalDate.now();
+
+            List<Borrow> borrows = new ArrayList<>();
+
+            // Empréstimos ativos (ainda não devolvidos)
+            Borrow borrow1 = new Borrow();
+            borrow1.setBorrowDate(today.minusDays(5));
+            borrow1.setDueDate(today.plusDays(10));
+            borrow1.setUser(users.get(0));
+            borrow1.setBook(books.get(0));
+            borrows.add(borrow1);
+
+            Borrow borrow2 = new Borrow();
+            borrow2.setBorrowDate(today.minusDays(3));
+            borrow2.setDueDate(today.plusDays(12));
+            borrow2.setUser(users.get(1));
+            borrow2.setBook(books.get(1));
+            borrows.add(borrow2);
+
+            // Empréstimos atrasados
+            Borrow borrow3 = new Borrow();
+
+            borrow3.setBorrowDate(today.minusDays(20));
+
+            borrow3.setDueDate(today.minusDays(5));
+
+            borrow3.setUser(users.get(0));
+
+            borrow3.setBook(books.get(2));
+
+            borrows.add(borrow3);
+
+            Borrow borrow4 = new Borrow();
+
+            borrow4.setBorrowDate(today.minusDays(15));
+
+            borrow4.setDueDate(today.minusDays(1));
+
+            borrow4.setUser(users.get(1));
+
+            borrow4.setBook(books.get(3));
+
+            borrows.add(borrow4);
+
+            // Empréstimos concluídos
+            Borrow borrow5 = new Borrow();
+
+            borrow5.setBorrowDate(today.minusDays(30));
+
+            borrow5.setDueDate(today.minusDays(15));
+
+            borrow5.setReturnDate(today.minusDays(14));
+
+            borrow5.setUser(users.get(0));
+
+            borrow5.setBook(books.get(4));
+
+            borrows.add(borrow5);
+
+            Borrow borrow6 = new Borrow();
+
+            borrow6.setBorrowDate(today.minusDays(25));
+
+            borrow6.setDueDate(today.minusDays(10));
+
+            borrow6.setReturnDate(today.minusDays(11));
+
+            borrow6.setUser(users.get(1));
+
+            borrow6.setBook(books.get(5));
+
+            borrows.add(borrow6);
+
+            // Múltiplos empréstimos por usuário
+            Borrow borrow7 = new Borrow();
+
+            borrow7.setBorrowDate(today.minusDays(2));
+
+            borrow7.setDueDate(today.plusDays(13));
+
+            borrow7.setUser(users.get(0));
+
+            borrow7.setBook(books.get(6));
+
+            borrows.add(borrow7);
+
+            Borrow borrow8 = new Borrow();
+
+            borrow8.setBorrowDate(today.minusDays(1));
+
+            borrow8.setDueDate(today.plusDays(14));
+
+            borrow8.setUser(users.get(1));
+
+            borrow8.setBook(books.get(0));
+
+            borrows.add(borrow8);
+
+            borrowRepository.saveAll(borrows);
+
         };
+
     }
+
 }

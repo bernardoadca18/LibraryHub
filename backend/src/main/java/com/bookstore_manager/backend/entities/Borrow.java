@@ -23,7 +23,7 @@ public class Borrow {
     @Column(nullable = false)
     private LocalDate borrowDate;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDate dueDate;
 
     @Column(nullable = true)
