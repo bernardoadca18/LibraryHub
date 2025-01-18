@@ -1,6 +1,7 @@
 package com.bookstore_manager.backend.dto;
 
 import com.bookstore_manager.backend.entities.User;
+import com.bookstore_manager.backend.projections.UserMinProjection;
 
 public class UserDTO {
 
@@ -17,6 +18,13 @@ public class UserDTO {
         this.name = entity.getName();
         this.email = entity.getEmail();
         this.phone = entity.getPhone();
+    }
+
+    public UserDTO(UserMinProjection projection) {
+        this.userId = projection.getUserId();
+        this.name = projection.getName();
+        this.email = projection.getEmail();
+        this.phone = projection.getPhone();
     }
 
     public Long getUserId() {

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bookstore_manager.backend.dto.UserDTO;
 import com.bookstore_manager.backend.entities.User;
+import com.bookstore_manager.backend.projections.UserMinProjection;
 import com.bookstore_manager.backend.repositories.UserRepository;
 
 @Service
@@ -31,4 +32,19 @@ public class UserService {
 
         return dto;
     }
+
+    @Transactional(readOnly = true)
+    public UserDTO findByEmail(String email) {
+        UserMinProjection projection = userRepository.findByEmail(email);
+        UserDTO dto = new UserDTO(projection);
+        return dto;
+    }
+
+    @Transactional(readOnly = true)
+    public UserDTO findByUsername(String username) {
+        UserMinProjection projection = userRepository.findByUsername(username);
+        UserDTO dto = new UserDTO(projection);
+        return dto;
+    }
+
 }

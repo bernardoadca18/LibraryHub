@@ -1,25 +1,5 @@
 package com.bookstore_manager.backend.projections;
 
-/*
-public interface BookMinProjection {
-
-    Long getBookId();
-
-    String getTitle();
-
-    String getIsbn();
-
-    Integer getPublishYear();
-
-    Integer getAvailableCopies();
-
-    String getCoverUrl();
-
-    Long getAuthorId();
-
-    Long getCategoryId();
-}
- */
 public interface BookMinProjection {
 
     Long getId();

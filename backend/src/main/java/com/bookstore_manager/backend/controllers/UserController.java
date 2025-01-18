@@ -30,4 +30,14 @@ public class UserController {
         List<UserDTO> result = userService.findAll();
         return result;
     }
+
+    @GetMapping(value = "/{username}")
+    public UserDTO findByUsername(@PathVariable String username) {
+        return userService.findByUsername(username);
+    }
+
+    @GetMapping(value = "/{email}")
+    public UserDTO findByEmail(@PathVariable String email) {
+        return userService.findByEmail(email);
+    }
 }
