@@ -78,9 +78,9 @@ public class DataLoader {
             ));
 
             List<Borrow> borrows = borrowRepository.saveAll(List.of(
-                    new Borrow(LocalDate.of(2025, 1, 1), LocalDate.of(2025, 1, 15), users.get(0), books.get(0)),
-                    new Borrow(LocalDate.of(2025, 1, 5), LocalDate.of(2025, 1, 20), users.get(1), books.get(1)),
-                    new Borrow(LocalDate.of(2025, 1, 10), LocalDate.of(2025, 1, 25), users.get(0), books.get(2))
+                    new Borrow(LocalDate.of(2025, 1, 1), LocalDate.of(2025, 1, 15), users.get(0), books.get(0), LocalDate.of(2025, 1, 10)),
+                    new Borrow(LocalDate.of(2025, 1, 5), LocalDate.of(2025, 1, 20), users.get(1), books.get(1), LocalDate.of(2025, 1, 20)),
+                    new Borrow(LocalDate.of(2025, 1, 10), LocalDate.of(2025, 1, 25), users.get(0), books.get(2), LocalDate.of(2025, 1, 26))
             ));
         };
     }

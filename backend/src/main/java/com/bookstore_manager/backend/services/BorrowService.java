@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bookstore_manager.backend.dto.BorrowDTO;
 import com.bookstore_manager.backend.entities.Borrow;
+import com.bookstore_manager.backend.projections.BorrowMinProjection;
 import com.bookstore_manager.backend.repositories.BorrowRepository;
 
 @Service
@@ -34,14 +35,16 @@ public class BorrowService {
 
     @Transactional(readOnly = true)
     public List<BorrowDTO> findAllByUserId(Long userId) {
-        List<Borrow> result = borrowRepository.findAllByUserId(userId);
+        List<BorrowMinProjection> result = borrowRepository.findAllByUserId(userId);
         return result.stream().map(x -> new BorrowDTO(x)).toList();
     }
 
     @Transactional(readOnly = true)
     public List<BorrowDTO> findAllByBookId(Long bookId) {
-        List<Borrow> result = borrowRepository.findAllByBookId(bookId);
+        List<BorrowMinProjection> result = borrowRepository.findAllByBookId(bookId);
         return result.stream().map(x -> new BorrowDTO(x)).toList();
     }
 
+    //@Transactional
+    //public List<BorrowMinProjection>
 }

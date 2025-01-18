@@ -3,10 +3,11 @@ package com.bookstore_manager.backend.dto;
 import java.time.LocalDate;
 
 import com.bookstore_manager.backend.entities.Borrow;
+import com.bookstore_manager.backend.projections.BorrowMinProjection;
 
 public class BorrowDTO {
 
-    private Integer borrowId;
+    private Long borrowId;
     private LocalDate borrowDate;
     private LocalDate returnDate;
     private Long userId;
@@ -23,11 +24,19 @@ public class BorrowDTO {
         this.bookId = entity.getBook().getBookId();
     }
 
-    public Integer getBorrowId() {
+    public BorrowDTO(BorrowMinProjection projection) {
+        this.borrowId = projection.getBorrowId();
+        this.borrowDate = projection.getBorrowDate();
+        this.returnDate = projection.getReturnDate();
+        this.userId = projection.getUserId();
+        this.bookId = projection.getBookId();
+    }
+
+    public Long getBorrowId() {
         return borrowId;
     }
 
-    public void setBorrowId(Integer borrowId) {
+    public void setBorrowId(Long borrowId) {
         this.borrowId = borrowId;
     }
 

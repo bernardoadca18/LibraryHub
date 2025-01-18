@@ -47,4 +47,16 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     ORDER BY b.title
 """)
     List<BookMinProjection> findByAuthorId(Long authorId);
+
+    @Query("SELECT b FROM Book b WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    List<BookMinProjection> searchByTitle(String searchTerm);
+
+    @Query("SELECT b FROM Book b WHERE b.availableCopies > 0")
+    List<BookMinProjection> findAvailableBooks();
+
+    @Query("SELECT b FROM Book b ORDER BY b.publishYear DESC")
+    List<BookMinProjection> findLatestBooks();
+
+    @Query("SELECT DISTINCT b.publishYear FROM Book b ORDER BY b.publishYear DESC")
+    List<Integer> findAllPublishYears();
 }

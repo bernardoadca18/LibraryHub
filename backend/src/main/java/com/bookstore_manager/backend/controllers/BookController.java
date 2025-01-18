@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookstore_manager.backend.dto.BookDTO;
+import com.bookstore_manager.backend.dto.BorrowDTO;
 import com.bookstore_manager.backend.services.BookService;
+import com.bookstore_manager.backend.services.BorrowService;
 
 @RestController
 @RequestMapping(value = "/api/books")
@@ -17,6 +19,9 @@ public class BookController {
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private BorrowService borrowService;
 
     @GetMapping(value = "/{id}")
     public BookDTO findById(@PathVariable Long id) {
@@ -41,6 +46,11 @@ public class BookController {
     public List<BookDTO> findBooksByAuthor(@PathVariable Long authorId) {
         List<BookDTO> result = bookService.findByAuthor(authorId);
         return result;
+    }
+
+    @GetMapping(value = "/{bookId}/borrows")
+    public List<BorrowDTO> findAllByBookId(@PathVariable Long bookId) {
+        return borrowService.findAllByBookId(bookId);
     }
 
 }

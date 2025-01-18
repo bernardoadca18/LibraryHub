@@ -18,12 +18,15 @@ public class Borrow {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer borrowId;
+    private Long borrowId;
 
     @Column(nullable = false)
     private LocalDate borrowDate;
 
     @Column(nullable = false)
+    private LocalDate dueDate;
+
+    @Column(nullable = true)
     private LocalDate returnDate;
 
     @ManyToOne
@@ -37,26 +40,28 @@ public class Borrow {
     public Borrow() {
     }
 
-    public Borrow(Integer borrowId, LocalDate borrowDate, LocalDate returnDate, User user, Book book) {
+    public Borrow(Long borrowId, LocalDate borrowDate, LocalDate returnDate, User user, Book book, LocalDate dueDate) {
         this.borrowId = borrowId;
         this.borrowDate = borrowDate;
         this.returnDate = returnDate;
         this.user = user;
         this.book = book;
+        this.dueDate = dueDate;
     }
 
-    public Borrow(LocalDate borrowDate, LocalDate returnDate, User user, Book book) {
+    public Borrow(LocalDate borrowDate, LocalDate returnDate, User user, Book book, LocalDate dueDate) {
         this.borrowDate = borrowDate;
         this.returnDate = returnDate;
         this.user = user;
         this.book = book;
+        this.dueDate = dueDate;
     }
 
-    public Integer getBorrowId() {
+    public Long getBorrowId() {
         return borrowId;
     }
 
-    public void setBorrowId(Integer borrowId) {
+    public void setBorrowId(Long borrowId) {
         this.borrowId = borrowId;
     }
 
@@ -112,6 +117,14 @@ public class Borrow {
         }
         final Borrow other = (Borrow) obj;
         return Objects.equals(this.borrowId, other.borrowId);
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 
 }
