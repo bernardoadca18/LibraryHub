@@ -40,4 +40,24 @@ public class BorrowController {
         return borrowService.findAllByBookId(bookId);
     }
 
+    @GetMapping(value = "/active")
+    public List<BorrowDTO> findActiveLoans() {
+        return borrowService.findActiveLoans();
+    }
+
+    @GetMapping(value = "/user/{userId}/active")
+    public List<BorrowDTO> findActiveUserLoans(@PathVariable Long userId) {
+        return borrowService.findActiveUserLoans(userId);
+    }
+
+    @GetMapping(value = "/overdue")
+    public List<BorrowDTO> findOverdueLoans() {
+        return borrowService.findOverdueLoans();
+    }
+
+    @GetMapping(value = "user/{userId}/count")
+    public int countActiveUserLoans(@PathVariable Long userId) {
+        return borrowService.countActiveUserLoans(userId);
+    }
+
 }

@@ -48,6 +48,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 """)
     List<BookMinProjection> findByAuthorId(Long authorId);
 
+    //
     @Query("SELECT b FROM Book b WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     List<BookMinProjection> searchByTitle(String searchTerm);
 

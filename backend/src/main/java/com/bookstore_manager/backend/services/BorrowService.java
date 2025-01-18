@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bookstore_manager.backend.dto.BorrowDTO;
 import com.bookstore_manager.backend.entities.Borrow;
-import com.bookstore_manager.backend.projections.BorrowMinProjection;
 import com.bookstore_manager.backend.repositories.BorrowRepository;
 
 @Service
@@ -35,16 +34,33 @@ public class BorrowService {
 
     @Transactional(readOnly = true)
     public List<BorrowDTO> findAllByUserId(Long userId) {
-        List<BorrowMinProjection> result = borrowRepository.findAllByUserId(userId);
+        List<Borrow> result = borrowRepository.findAllByUserId(userId);
         return result.stream().map(x -> new BorrowDTO(x)).toList();
     }
 
     @Transactional(readOnly = true)
     public List<BorrowDTO> findAllByBookId(Long bookId) {
-        List<BorrowMinProjection> result = borrowRepository.findAllByBookId(bookId);
+        List<Borrow> result = borrowRepository.findAllByBookId(bookId);
         return result.stream().map(x -> new BorrowDTO(x)).toList();
     }
 
-    //@Transactional
-    //public List<BorrowMinProjection>
+    //
+    @Transactional
+    public List<BorrowDTO> findActiveLoans() {
+        return borrowRepository.findActiveLoans().stream().map(x -> new BorrowDTO(x)).toList();
+    }
+
+    @Transactional
+    public List<BorrowDTO> findActiveUserLoans(Long userId) {
+        return borrowRepository.findActiveUserLoans(userId).stream().map(x -> new BorrowDTO(x)).toList();
+    }
+
+    @Transactional
+    public List<BorrowDTO> findOverdueLoans() {
+        return borrowRepository.findOverdueLoans().stream().map(x -> new BorrowDTO(x)).toList();
+    }
+
+    public int countActiveUserLoans(Long userId) {
+        return borrowRepository.countActiveUserLoans(userId);
+    }
 }
