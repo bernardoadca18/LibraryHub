@@ -1,9 +1,13 @@
 package com.bookstore_manager.backend.services;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -127,5 +131,30 @@ public class BookService {
         entity.setCoverUrl(dto.getCoverUrl());
         entity.setAuthor(authorRepository.findById(dto.getAuthorId()).get());
         entity.setCategory(categoryRepository.findById(dto.getCategoryId()).get());
+    }
+
+    //
+    public List<BookDTO> searchBooks(String title, String author, String category, Integer year) {
+
+        Specification<Book> spec = Specification.where(null);
+
+        if (title != null) {
+            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
+        }
+        return bookRepository.findAll(spec).stream().map(BookDTO::new).collect(Collectors.toList());
+
+    }
+
+    public Map<String, Object> getBookStatistics() {
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalBooks", bookRepository.count());
+        stats.put("availableBooks", bookRepository.countByAvailableCopiesGreaterThan(0));
+        stats.put("categoriesCount", bookRepository.countByCategory());
+        return stats;
+    }
+
+    public List<BookDTO> getRecommendedBooks(Long userId) {
+        return bookRepository.findRecommendedBooks(userId).stream().map(BookDTO::new).collect(Collectors.toList());
     }
 }

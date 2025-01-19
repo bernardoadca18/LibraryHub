@@ -1,6 +1,7 @@
 package com.bookstore_manager.backend.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookstore_manager.backend.dto.BookDTO;
@@ -78,5 +80,27 @@ public class BookController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    //
+    @GetMapping("/search")
+    public ResponseEntity<List<BookDTO>> searchBooks(@RequestParam(required = true) String searchString) {
+        if (searchString == null || searchString.trim().isEmpty()) {
+            throw new IllegalArgumentException("Search string cannot be empty");
+        }
+
+        List<BookDTO> result = bookService.searchByTitle(searchString);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getBookStatistics() {
+        return ResponseEntity.ok(bookService.getBookStatistics());
+    }
+
+    @GetMapping("/recommendations")
+    public ResponseEntity<List<BookDTO>> getRecommendedBooks(@RequestParam Long userId) {
+        return ResponseEntity.ok(bookService.getRecommendedBooks(userId));
     }
 }

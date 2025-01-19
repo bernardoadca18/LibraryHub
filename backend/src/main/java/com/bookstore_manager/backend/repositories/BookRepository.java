@@ -3,12 +3,15 @@ package com.bookstore_manager.backend.repositories;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.bookstore_manager.backend.entities.Book;
 import com.bookstore_manager.backend.projections.BookMinProjection;
+import com.bookstore_manager.backend.projections.CategoryCountProjection;
 
-public interface BookRepository extends JpaRepository<Book, Long> {
+public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
 
     @Query(nativeQuery = true, value = """
     SELECT b.book_id AS id, 
@@ -60,4 +63,21 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Query("SELECT DISTINCT b.publishYear FROM Book b ORDER BY b.publishYear DESC")
     List<Integer> findAllPublishYears();
+
+    //
+    @Query("SELECT COUNT(b) FROM Book b WHERE b.availableCopies > :copies")
+    Long countByAvailableCopiesGreaterThan(int copies);
+
+    @Query("SELECT b.category.name as category, COUNT(b) as count FROM Book b GROUP BY b.category.name")
+    List<CategoryCountProjection> countByCategory();
+
+    @Query(value = """
+        SELECT b.* FROM books b
+        JOIN borrows br ON br.book_id = b.book_id
+        WHERE br.user_id = :userId
+        GROUP BY b.book_id
+        ORDER BY COUNT(br.borrow_id) DESC
+        LIMIT 5
+        """, nativeQuery = true)
+    List<Book> findRecommendedBooks(@Param("userId") Long userId);
 }

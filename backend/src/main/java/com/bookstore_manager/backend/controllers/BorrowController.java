@@ -1,6 +1,7 @@
 package com.bookstore_manager.backend.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookstore_manager.backend.dto.BorrowDTO;
@@ -86,5 +88,21 @@ public class BorrowController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         borrowService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    //
+    @GetMapping("/statistics")
+    public ResponseEntity<Map<String, Object>> getBorrowStatistics() {
+        return ResponseEntity.ok(borrowService.getBorrowStatistics());
+    }
+
+    @GetMapping("/late-returns")
+    public ResponseEntity<List<BorrowDTO>> getLateReturns() {
+        return ResponseEntity.ok(borrowService.getLateReturns());
+    }
+
+    @PostMapping("/extend")
+    public ResponseEntity<BorrowDTO> extendBorrowPeriod(@RequestParam Long borrowId, @RequestParam Integer additionalDays) {
+        return ResponseEntity.ok(borrowService.extendBorrowPeriod(borrowId, additionalDays));
     }
 }
