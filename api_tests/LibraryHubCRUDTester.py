@@ -4,7 +4,7 @@ BASE_URL = "http://localhost:8080"
 
 # Variáveis para IDs e outras informações
 user_id = 1
-username = "johndoe"
+username = "John Doe"
 email = "johndoe@example.com"
 
 book_id = 1

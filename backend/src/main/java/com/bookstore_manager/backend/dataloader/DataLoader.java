@@ -62,13 +62,9 @@ public class DataLoader {
             ));
 
             List<Book> books = bookRepository.saveAll(List.of(
-                    // Livros existentes
-
                     new Book("Harry Potter and the Philosopher's Stone", "9780747532699", 1997, 5, "url1", authors.get(0), categories.get(3)),
                     new Book("Foundation", "9780553293357", 1951, 3, "url2", authors.get(1), categories.get(2)),
                     new Book("1984", "9780451524935", 1949, 6, "url3", authors.get(2), categories.get(0)),
-                    // Novos livros
-
                     new Book("One Hundred Years of Solitude", "9780060883287", 1967, 4, "url4", authors.get(8), categories.get(0)),
                     new Book("Mrs. Dalloway", "9780156628709", 1925, 3, "url5", authors.get(9), categories.get(0)),
                     new Book("The Old Man and the Sea", "9780684801223", 1952, 5, "url6", authors.get(10), categories.get(0)),
