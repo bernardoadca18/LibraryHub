@@ -9,6 +9,7 @@ public class BorrowDTO {
 
     private Long borrowId;
     private LocalDate borrowDate;
+    private LocalDate dueDate;
     private LocalDate returnDate;
     private Long userId;
     private Long bookId;
@@ -20,6 +21,7 @@ public class BorrowDTO {
         this.borrowId = entity.getBorrowId();
         this.borrowDate = entity.getBorrowDate();
         this.returnDate = entity.getReturnDate();
+        this.dueDate = entity.getDueDate();
         this.userId = entity.getUser().getUserId();
         this.bookId = entity.getBook().getBookId();
     }
@@ -70,6 +72,14 @@ public class BorrowDTO {
 
     public void setBookId(Long bookId) {
         this.bookId = bookId;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 
 }

@@ -29,7 +29,7 @@ public class CategoryController {
     @Autowired
     private BookService bookService;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/id/{id}")
     public CategoryDTO findById(@PathVariable Long id) {
         CategoryDTO result = categoryService.findById(id);
         return result;
@@ -40,7 +40,7 @@ public class CategoryController {
         return categoryService.findAll();
     }
 
-    @GetMapping(value = "/{categoryId}/books")
+    @GetMapping(value = "/id/{categoryId}/books")
     public List<BookDTO> findBooksByCategory(@PathVariable Long categoryId) {
         List<BookDTO> result = bookService.findByCategory(categoryId);
         return result;
@@ -55,14 +55,14 @@ public class CategoryController {
     }
 
     // UPDATE
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/id/{id}")
     public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
         CategoryDTO result = categoryService.update(id, categoryDTO);
         return ResponseEntity.ok(result);
     }
 
     // DELETE
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/id/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         categoryService.delete(id);
         return ResponseEntity.noContent().build();

@@ -3,12 +3,17 @@ package com.bookstore_manager.backend.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bookstore_manager.backend.dto.AuthorDTO;
 import com.bookstore_manager.backend.entities.Author;
+import com.bookstore_manager.backend.exception.DatabaseException;
+import com.bookstore_manager.backend.exception.ResourceNotFoundException;
 import com.bookstore_manager.backend.repositories.AuthorRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class AuthorService {
@@ -30,5 +35,45 @@ public class AuthorService {
         AuthorDTO dto = new AuthorDTO(result);
 
         return dto;
+    }
+
+    // CREATE   
+    @Transactional
+    public AuthorDTO create(AuthorDTO dto) {
+        Author entity = new Author();
+        copyDtoToEntity(dto, entity);
+        entity = authorRepository.save(entity);
+        return new AuthorDTO(entity);
+    }
+
+    // UPDATE
+    @Transactional
+    public AuthorDTO update(Long id, AuthorDTO dto) {
+        try {
+            Author entity = authorRepository.getReferenceById(id);
+            copyDtoToEntity(dto, entity);
+            entity = authorRepository.save(entity);
+            return new AuthorDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Author not found");
+        }
+    }
+
+    // DELETE
+    @Transactional
+    public void delete(Long id) {
+        if (!authorRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Author not found");
+        }
+        try {
+            authorRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Integrity violation");
+        }
+    }
+
+    private void copyDtoToEntity(AuthorDTO dto, Author entity) {
+        entity.setName(dto.getName());
+        entity.setBirthDate(dto.getBirthDate());
     }
 }

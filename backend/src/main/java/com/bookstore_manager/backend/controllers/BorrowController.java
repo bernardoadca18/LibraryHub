@@ -3,8 +3,14 @@ package com.bookstore_manager.backend.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +24,7 @@ public class BorrowController {
     @Autowired
     private BorrowService borrowService;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/id/{id}")
     public BorrowDTO findById(@PathVariable Long id) {
         BorrowDTO result = borrowService.findById(id);
 
@@ -60,4 +66,25 @@ public class BorrowController {
         return borrowService.countActiveUserLoans(userId);
     }
 
+    //
+    // CREATE
+    @PostMapping
+    public ResponseEntity<BorrowDTO> create(@RequestBody BorrowDTO borrowDTO) {
+        BorrowDTO result = borrowService.create(borrowDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
+    // UPDATE
+    @PutMapping(value = "/id/{id}")
+    public ResponseEntity<BorrowDTO> update(@PathVariable Long id, @RequestBody BorrowDTO dto) {
+        BorrowDTO result = borrowService.update(id, dto);
+        return ResponseEntity.ok(result);
+    }
+
+    // DELETE
+    @DeleteMapping(value = "/id/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        borrowService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

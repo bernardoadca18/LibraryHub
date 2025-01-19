@@ -3,18 +3,31 @@ package com.bookstore_manager.backend.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bookstore_manager.backend.dto.BorrowDTO;
 import com.bookstore_manager.backend.entities.Borrow;
+import com.bookstore_manager.backend.exception.DatabaseException;
+import com.bookstore_manager.backend.exception.ResourceNotFoundException;
+import com.bookstore_manager.backend.repositories.BookRepository;
 import com.bookstore_manager.backend.repositories.BorrowRepository;
+import com.bookstore_manager.backend.repositories.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class BorrowService {
 
     @Autowired
     private BorrowRepository borrowRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     @Transactional(readOnly = true)
     public List<BorrowDTO> findAll() {
@@ -62,5 +75,48 @@ public class BorrowService {
 
     public int countActiveUserLoans(Long userId) {
         return borrowRepository.countActiveUserLoans(userId);
+    }
+
+    // CREATE
+    @Transactional
+    public BorrowDTO create(BorrowDTO dto) {
+        Borrow entity = new Borrow();
+        copyDtoToEntity(dto, entity);
+        entity = borrowRepository.save(entity);
+        return new BorrowDTO(entity);
+    }
+
+    // UPDATE
+    @Transactional
+    public BorrowDTO update(Long id, BorrowDTO dto) {
+        try {
+            Borrow entity = borrowRepository.getReferenceById(id);
+            copyDtoToEntity(dto, entity);
+            entity = borrowRepository.save(entity);
+            return new BorrowDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Borrow not found");
+        }
+    }
+
+    // DELETE
+    @Transactional
+    public void delete(Long id) {
+        if (!borrowRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Borrow not found");
+        }
+        try {
+            borrowRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Integrity violation");
+        }
+    }
+
+    private void copyDtoToEntity(BorrowDTO dto, Borrow entity) {
+        entity.setBorrowDate(dto.getBorrowDate());
+        entity.setDueDate(dto.getDueDate());
+        entity.setReturnDate(dto.getReturnDate());
+        entity.setUser(userRepository.findById(dto.getUserId()).get());
+        entity.setBook(bookRepository.findById(dto.getBookId()).get());
     }
 }
