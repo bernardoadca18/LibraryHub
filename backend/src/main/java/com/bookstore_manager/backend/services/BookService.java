@@ -48,4 +48,26 @@ public class BookService {
 
         return dto;
     }
+
+    @Transactional
+    public List<BookDTO> searchByTitle(String searchTerm) {
+        List<BookMinProjection> result = bookRepository.searchByTitle(searchTerm);
+        List<BookDTO> dto = result.stream().map(x -> new BookDTO(x)).toList();
+
+        return dto;
+    }
+
+    @Transactional
+    public List<BookDTO> findAvailableBooks() {
+        return bookRepository.findAvailableBooks().stream().map((x) -> new BookDTO(x)).toList();
+    }
+
+    @Transactional
+    public List<BookDTO> findLatestBooks() {
+        return bookRepository.findLatestBooks().stream().map((x) -> new BookDTO(x)).toList();
+    }
+
+    public List<Integer> findAllPublishYears() {
+        return bookRepository.findAllPublishYears();
+    }
 }

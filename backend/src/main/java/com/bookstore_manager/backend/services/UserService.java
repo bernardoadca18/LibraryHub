@@ -87,28 +87,6 @@ public class UserService {
         }
     }
 
-    /*
-    //
-    public User createUser(User entity) {
-        return userRepository.save(entity);
-    }
-
-    public User updateUser(Long id, User userDetails) {
-        User user = userRepository.findById(id).get();
-
-        user.setName(userDetails.getName());
-        user.setEmail(userDetails.getEmail());
-        user.setPhone(userDetails.getPhone());
-
-        return userRepository.save(user);
-    }
-
-    public void deleteUser(Long id) {
-        User user = userRepository.findById(id).get();
-        userRepository.delete(user);
-    }
-    //
-     */
     private void copyDtoToEntity(UserDTO dto, User entity) {
         entity.setName(dto.getName());
         entity.setEmail(dto.getEmail());
