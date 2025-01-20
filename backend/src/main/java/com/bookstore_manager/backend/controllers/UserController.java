@@ -59,20 +59,20 @@ public class UserController {
         return userService.findByEmail(email);
     }
 
-    @GetMapping(value = "/{userId}/borrows")
+    @GetMapping(value = "/id/{userId}/borrows")
     public List<BorrowDTO> findAllByUserId(@PathVariable Long userId) {
         return borrowService.findAllByUserId(userId);
     }
 
     // UPDATE
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/id/{id}")
     public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO userDTO) {
         UserDTO result = userService.update(id, userDTO);
         return ResponseEntity.ok(result);
     }
 
     // DELETE
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/id/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
