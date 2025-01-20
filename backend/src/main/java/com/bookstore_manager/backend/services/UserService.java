@@ -1,9 +1,11 @@
 package com.bookstore_manager.backend.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,6 +93,17 @@ public class UserService {
         entity.setName(dto.getName());
         entity.setEmail(dto.getEmail());
         entity.setPhone(dto.getPhone());
+    }
+
+    // SEARCH
+    public List<UserDTO> searchUsers(String name) {
+        Specification<User> spec = Specification.where(null);
+
+        if (name != null) {
+            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
+        }
+
+        return userRepository.findAll(spec).stream().map(UserDTO::new).collect(Collectors.toList());
     }
 
 }

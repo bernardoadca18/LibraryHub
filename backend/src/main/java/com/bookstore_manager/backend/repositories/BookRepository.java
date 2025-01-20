@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import com.bookstore_manager.backend.entities.Book;
 import com.bookstore_manager.backend.projections.BookMinProjection;
@@ -70,14 +69,4 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
 
     @Query("SELECT b.category.name as category, COUNT(b) as count FROM Book b GROUP BY b.category.name")
     List<CategoryCountProjection> countByCategory();
-
-    @Query(value = """
-        SELECT b.* FROM books b
-        JOIN borrows br ON br.book_id = b.book_id
-        WHERE br.user_id = :userId
-        GROUP BY b.book_id
-        ORDER BY COUNT(br.borrow_id) DESC
-        LIMIT 5
-        """, nativeQuery = true)
-    List<Book> findRecommendedBooks(@Param("userId") Long userId);
 }

@@ -1,9 +1,11 @@
 package com.bookstore_manager.backend.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,5 +77,16 @@ public class CategoryService {
 
     private void copyDtoToEntity(CategoryDTO dto, Category entity) {
         entity.setName(dto.getName());
+    }
+
+    // SEARCH
+    public List<CategoryDTO> searchCategories(String name) {
+        Specification<Category> spec = Specification.where(null);
+
+        if (name != null) {
+            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
+        }
+
+        return categoryRepository.findAll(spec).stream().map(CategoryDTO::new).collect(Collectors.toList());
     }
 }

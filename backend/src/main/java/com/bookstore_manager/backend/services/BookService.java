@@ -134,15 +134,14 @@ public class BookService {
     }
 
     //
-    public List<BookDTO> searchBooks(String title, String author, String category, Integer year) {
-
+    public List<BookDTO> searchBooks(String title) {
         Specification<Book> spec = Specification.where(null);
 
         if (title != null) {
             spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
         }
-        return bookRepository.findAll(spec).stream().map(BookDTO::new).collect(Collectors.toList());
 
+        return bookRepository.findAll(spec).stream().map(BookDTO::new).collect(Collectors.toList());
     }
 
     public Map<String, Object> getBookStatistics() {
@@ -152,9 +151,5 @@ public class BookService {
         stats.put("availableBooks", bookRepository.countByAvailableCopiesGreaterThan(0));
         stats.put("categoriesCount", bookRepository.countByCategory());
         return stats;
-    }
-
-    public List<BookDTO> getRecommendedBooks(Long userId) {
-        return bookRepository.findRecommendedBooks(userId).stream().map(BookDTO::new).collect(Collectors.toList());
     }
 }

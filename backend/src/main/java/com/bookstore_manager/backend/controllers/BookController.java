@@ -84,23 +84,13 @@ public class BookController {
 
     //
     @GetMapping("/search")
-    public ResponseEntity<List<BookDTO>> searchBooks(@RequestParam(required = true) String searchString) {
-        if (searchString == null || searchString.trim().isEmpty()) {
-            throw new IllegalArgumentException("Search string cannot be empty");
-        }
-
-        List<BookDTO> result = bookService.searchByTitle(searchString);
-
+    public ResponseEntity<List<BookDTO>> searchBooks(@RequestParam(required = false) String title) {
+        List<BookDTO> result = bookService.searchBooks(title);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getBookStatistics() {
         return ResponseEntity.ok(bookService.getBookStatistics());
-    }
-
-    @GetMapping("/recommendations")
-    public ResponseEntity<List<BookDTO>> getRecommendedBooks(@RequestParam Long userId) {
-        return ResponseEntity.ok(bookService.getRecommendedBooks(userId));
     }
 }
