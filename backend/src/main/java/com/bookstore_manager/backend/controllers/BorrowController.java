@@ -68,6 +68,11 @@ public class BorrowController {
         return borrowService.countActiveUserLoans(userId);
     }
 
+    @GetMapping(value = "/count")
+    public Long getBorrowCount() {
+        return borrowService.getBorrowCount();
+    }
+
     //
     // CREATE
     @PostMapping

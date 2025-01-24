@@ -46,6 +46,11 @@ public class AuthorController {
         return result;
     }
 
+    @GetMapping(value = "/count")
+    public Long getAuthorCount() {
+        return authorService.getAuthorCount();
+    }
+
     // CREATE
     @PostMapping
     public ResponseEntity<AuthorDTO> create(@RequestBody AuthorDTO authorDTO) {

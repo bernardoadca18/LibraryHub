@@ -39,6 +39,11 @@ public class AuthorService {
         return dto;
     }
 
+    @Transactional(readOnly = true)
+    public Long getAuthorCount() {
+        return authorRepository.getAuthorCount();
+    }
+
     // CREATE   
     @Transactional
     public AuthorDTO create(AuthorDTO dto) {

@@ -54,6 +54,11 @@ public class UserService {
         return dto;
     }
 
+    @Transactional(readOnly = true)
+    public Long getUserCount() {
+        return userRepository.getUserCount();
+    }
+
     // CREATE
     @Transactional
     public UserDTO create(UserDTO dto) {

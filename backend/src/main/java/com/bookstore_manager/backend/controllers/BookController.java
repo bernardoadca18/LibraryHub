@@ -60,6 +60,11 @@ public class BookController {
         return borrowService.findAllByBookId(bookId);
     }
 
+    @GetMapping(value = "/count")
+    public Long getBookCount() {
+        return bookService.getBookCount();
+    }
+
     //
     // CREATE
     @PostMapping

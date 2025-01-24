@@ -64,6 +64,11 @@ public class UserController {
         return borrowService.findAllByUserId(userId);
     }
 
+    @GetMapping(value = "/count")
+    public Long getUserCount() {
+        return userService.getUserCount();
+    }
+
     // UPDATE
     @PutMapping(value = "/id/{id}")
     public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO userDTO) {

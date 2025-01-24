@@ -81,6 +81,11 @@ public class BorrowService {
         return borrowRepository.countActiveUserLoans(userId);
     }
 
+    @Transactional(readOnly = true)
+    public Long getBorrowCount() {
+        return borrowRepository.getBorrowCount();
+    }
+
     // CREATE
     @Transactional
     public BorrowDTO create(BorrowDTO dto) {

@@ -37,4 +37,7 @@ public interface BorrowRepository extends JpaRepository<Borrow, Long> {
 
     @Query("SELECT b FROM Borrow b WHERE b.dueDate < CURRENT_DATE AND b.returnDate IS NULL")
     List<Borrow> findLateReturns();
+
+    @Query("SELECT COUNT(b) FROM Borrow b")
+    Long getBorrowCount();
 }

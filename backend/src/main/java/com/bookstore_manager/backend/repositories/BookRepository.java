@@ -69,4 +69,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
 
     @Query("SELECT b.category.name as category, COUNT(b) as count FROM Book b GROUP BY b.category.name")
     List<CategoryCountProjection> countByCategory();
+
+    @Query("SELECT COUNT(b) FROM Book b")
+    Long getBookCount();
 }

@@ -40,6 +40,11 @@ public class CategoryService {
         return dto;
     }
 
+    @Transactional(readOnly = true)
+    public Long getCategoryCount() {
+        return categoryRepository.getCategoryCount();
+    }
+
     // CREATE   
     @Transactional
     public CategoryDTO create(CategoryDTO dto) {

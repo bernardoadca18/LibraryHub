@@ -88,6 +88,11 @@ public class BookService {
         return bookRepository.findAllPublishYears();
     }
 
+    @Transactional(readOnly = true)
+    public Long getBookCount() {
+        return bookRepository.getBookCount();
+    }
+
     // CREATE
     @Transactional
     public BookDTO create(BookDTO dto) {

@@ -46,6 +46,11 @@ public class CategoryController {
         return result;
     }
 
+    @GetMapping(value = "/count")
+    public Long getCategoryCount() {
+        return categoryService.getCategoryCount();
+    }
+
     // CREATE
     @PostMapping
     public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO categoryDTO) {
