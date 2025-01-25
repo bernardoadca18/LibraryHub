@@ -31,7 +31,7 @@ class HttpRequest:
             print("Making Request: \nPOST ", final_url, '\nData: ', data, "\n")
             response = requests.post(final_url, json=data, timeout=5)
 
-        if response.status_code in [200, 201]:  # 200 OK or 201 Created
+        if response.status_code in [200, 201]:
             print("POST Response:", response.json())
         else:
             print("POST Failed with status code:", response.status_code)
@@ -784,3 +784,346 @@ def test_can_get_book_borrows_task(httpRequest=httpRequest, ENDPOINT=BOOK_ENDPOI
             user_delete_response = httpRequest.make_delete_request(USER_ENDPOINT + "/id", user_id)
             assert user_delete_response.status_code == 204
             
+#######################################################################################################################################
+#   CATEGORIES
+#######################################################################################################################################
+
+CATEGORY_ENDPOINT = '/categories'
+
+def test_can_call_category_endpoint(httpRequest=httpRequest, ENDPOINT=CATEGORY_ENDPOINT):
+    response = httpRequest.make_get_request(ENDPOINT)
+    assert response.status_code == 200
+    pass
+
+def test_can_get_category_by_id_task(httpRequest=httpRequest, ENDPOINT=CATEGORY_ENDPOINT):
+    created_ids = []
+    try:
+        # CREATE
+        payload = {
+            "name": "Sample Category"
+        }
+
+        response_post = httpRequest.make_post_request(ENDPOINT, payload)
+        post_data = response_post.json()
+        created_ids.append(post_data['categoryId'])
+
+        # READ
+        new_id = post_data['categoryId']
+        response_get = httpRequest.make_get_request(ENDPOINT + '/id/' + str(new_id))
+        data_get = response_get.json()
+
+        assert data_get["name"] == payload["name"]
+        assert response_get.status_code == 200
+    finally:
+        for _id in created_ids:
+            response = httpRequest.make_delete_request(ENDPOINT + '/id', _id)
+            assert response.status_code == 204
+    pass
+
+def test_can_create_category_task(httpRequest=httpRequest, ENDPOINT=CATEGORY_ENDPOINT):
+    created_ids = []
+    try:
+        payload = {
+            "name": "New Test Category"
+        }
+
+        response_post = httpRequest.make_post_request(ENDPOINT, payload)
+        post_data = response_post.json()
+        new_id = post_data['categoryId']
+        created_ids.append(new_id)
+
+        response_get = httpRequest.make_get_request(ENDPOINT + '/id/' + str(new_id))
+        data_get = response_get.json()
+
+        assert data_get["name"] == payload["name"]
+        assert response_get.status_code == 200
+    finally:
+        for _id in created_ids:
+            response = httpRequest.make_delete_request(ENDPOINT + '/id', _id)
+            assert response.status_code == 204
+    pass
+
+def test_can_update_category_task(httpRequest=httpRequest, ENDPOINT=CATEGORY_ENDPOINT):
+    created_ids = []
+    try:
+        # Create
+        create_payload = {
+            "name": "Category to Update"
+        }
+        create_response = httpRequest.make_post_request(ENDPOINT, create_payload)
+        create_data = create_response.json()
+        create_id = create_data["categoryId"]
+        created_ids.append(create_id)
+
+        # Update
+        update_payload = {
+            "name": "Updated Category Name"
+        }
+        update_response = httpRequest.make_put_request(ENDPOINT + '/id', create_id, update_payload)
+        update_data = update_response.json()
+
+        # Validate
+        get_response = httpRequest.make_get_request(ENDPOINT + '/id/' + str(create_id))
+        get_data = get_response.json()
+
+        assert get_data["name"] == update_payload["name"]
+        assert get_response.status_code == 200
+    finally:
+        for _id in created_ids:
+            response = httpRequest.make_delete_request(ENDPOINT + '/id', _id)
+            assert response.status_code == 204
+    pass
+
+def test_can_delete_category_task(httpRequest=httpRequest, ENDPOINT=CATEGORY_ENDPOINT):
+    # Create
+    payload = {
+        "name": "Category to Delete"
+    }
+    create_response = httpRequest.make_post_request(ENDPOINT, payload)
+    create_data = create_response.json()
+    create_id = create_data["categoryId"]
+    
+    assert create_response.status_code == 200 or create_response.status_code == 201
+    
+    # Delete
+    delete_response = httpRequest.make_delete_request(ENDPOINT + '/id', create_id)
+    assert delete_response.status_code == 204
+    
+    # Verify deletion
+    get_response = httpRequest.make_get_request(ENDPOINT + '/id/' + str(create_id))
+    assert get_response.status_code != 200
+    pass
+
+#######################################################################################################################################
+#   USERS
+#######################################################################################################################################
+
+USER_ENDPOINT = '/users'
+
+def test_can_call_user_endpoint(httpRequest=httpRequest, ENDPOINT=USER_ENDPOINT):
+    response = httpRequest.make_get_request(ENDPOINT)
+    assert response.status_code == 200
+    pass
+
+def test_can_get_user_by_id_task(httpRequest=httpRequest, ENDPOINT=USER_ENDPOINT):
+    created_ids = []
+    try:
+        payload = {
+            "name": "Test User",
+            "email": "test@example.com",
+            "phone": "123-456-7890"
+        }
+
+        response_post = httpRequest.make_post_request(ENDPOINT, payload)
+        post_data = response_post.json()
+        created_ids.append(post_data['userId'])
+
+        new_id = post_data['userId']
+        response_get = httpRequest.make_get_request(ENDPOINT + '/id/' + str(new_id))
+        data_get = response_get.json()
+
+        assert data_get["name"] == payload["name"]
+        assert data_get["email"] == payload["email"]
+        assert data_get["phone"] == payload["phone"]
+        assert response_get.status_code == 200
+    finally:
+        for _id in created_ids:
+            response = httpRequest.make_delete_request(ENDPOINT + '/id', _id)
+            assert response.status_code == 204
+    pass
+
+def test_can_get_user_by_email_task(httpRequest=httpRequest, ENDPOINT=USER_ENDPOINT):
+    created_ids = []
+    try:
+        payload = {
+            "name": "Email Test User",
+            "email": "emailtest@example.com",
+            "phone": "123-456-7890"
+        }
+
+        response_post = httpRequest.make_post_request(ENDPOINT, payload)
+        post_data = response_post.json()
+        created_ids.append(post_data['userId'])
+
+        response_get = httpRequest.make_get_request(ENDPOINT + '/email/' + payload["email"])
+        data_get = response_get.json()
+
+        assert data_get["name"] == payload["name"]
+        assert data_get["email"] == payload["email"]
+        assert data_get["phone"] == payload["phone"]
+        assert response_get.status_code == 200
+    finally:
+        for _id in created_ids:
+            response = httpRequest.make_delete_request(ENDPOINT + '/id', _id)
+            assert response.status_code == 204
+    pass
+
+def test_can_update_user_task(httpRequest=httpRequest, ENDPOINT=USER_ENDPOINT):
+    created_ids = []
+    try:
+        # Create
+        create_payload = {
+            "name": "Update Test User",
+            "email": "update@example.com",
+            "phone": "123-456-7890"
+        }
+        create_response = httpRequest.make_post_request(ENDPOINT, create_payload)
+        create_data = create_response.json()
+        create_id = create_data["userId"]
+        created_ids.append(create_id)
+
+        # Update
+        update_payload = {
+            "name": "Updated User",
+            "email": "updated@example.com",
+            "phone": "987-654-3210"
+        }
+        update_response = httpRequest.make_put_request(ENDPOINT + '/id', create_id, update_payload)
+        update_data = update_response.json()
+
+        # Validate
+        get_response = httpRequest.make_get_request(ENDPOINT + '/id/' + str(create_id))
+        get_data = get_response.json()
+
+        assert get_data["name"] == update_payload["name"]
+        assert get_data["email"] == update_payload["email"]
+        assert get_data["phone"] == update_payload["phone"]
+        assert get_response.status_code == 200
+    finally:
+        for _id in created_ids:
+            response = httpRequest.make_delete_request(ENDPOINT + '/id', _id)
+            assert response.status_code == 204
+    pass
+
+#######################################################################################################################################
+#   BORROWS
+#######################################################################################################################################
+
+BORROW_ENDPOINT = '/borrows'
+
+def test_can_call_borrow_endpoint(httpRequest=httpRequest, ENDPOINT=BORROW_ENDPOINT):
+    response = httpRequest.make_get_request(ENDPOINT)
+    assert response.status_code == 200
+    pass
+
+def test_can_create_and_get_borrow_task(httpRequest=httpRequest, ENDPOINT=BORROW_ENDPOINT):
+    created_borrow_ids = []
+    created_user_ids = []
+    created_book_ids = []
+    
+    try:
+        # Create test user
+        user_payload = {
+            "name": "Borrow Test User",
+            "email": "borrowtest@example.com",
+            "phone": "123-456-7890"
+        }
+        user_response = httpRequest.make_post_request('/users', user_payload)
+        user_data = user_response.json()
+        created_user_ids.append(user_data['userId'])
+
+        # Create test book
+        book_payload = {
+            "title": "Borrow Test Book",
+            "isbn": "9999999999999",
+            "publishYear": 2023,
+            "availableCopies": 5,
+            "coverUrl": "test-url",
+            "authorId": 1,
+            "categoryId": 1
+        }
+        book_response = httpRequest.make_post_request('/books', book_payload)
+        book_data = book_response.json()
+        created_book_ids.append(book_data['bookId'])
+
+        # Create borrow
+        borrow_payload = {
+            "userId": user_data['userId'],
+            "bookId": book_data['bookId'],
+            "borrowDate": "2023-01-01",
+            "returnDate": None
+        }
+        borrow_response = httpRequest.make_post_request(ENDPOINT, borrow_payload)
+        borrow_data = borrow_response.json()
+        created_borrow_ids.append(borrow_data['borrowId'])
+
+        # Verify borrow
+        get_response = httpRequest.make_get_request(ENDPOINT + '/id/' + str(borrow_data['borrowId']))
+        get_data = get_response.json()
+
+        assert get_data["userId"] == borrow_payload["userId"]
+        assert get_data["bookId"] == borrow_payload["bookId"]
+        assert get_response.status_code == 200
+    finally:
+        # Cleanup
+        for _id in created_borrow_ids:
+            response = httpRequest.make_delete_request(ENDPOINT + '/id', _id)
+            assert response.status_code == 204
+        for _id in created_book_ids:
+            response = httpRequest.make_delete_request('/books/id', _id)
+            assert response.status_code == 204
+        for _id in created_user_ids:
+            response = httpRequest.make_delete_request('/users/id', _id)
+            assert response.status_code == 204
+    pass
+
+def test_can_get_active_loans_task(httpRequest=httpRequest, ENDPOINT=BORROW_ENDPOINT):
+    created_borrow_ids = []
+    created_user_ids = []
+    created_book_ids = []
+    
+    try:
+        # Create test user and book
+        user_payload = {
+            "name": "Active Loans Test User",
+            "email": "activeloans@example.com",
+            "phone": "123-456-7890"
+        }
+        user_response = httpRequest.make_post_request('/users', user_payload)
+        user_data = user_response.json()
+        created_user_ids.append(user_data['userId'])
+
+        # Create multiple books and borrows
+        n = 3  # number of active loans to create
+        for i in range(n):
+            book_payload = {
+                "title": f"Active Loan Book {i}",
+                "isbn": f"999999999{i}999",
+                "publishYear": 2023,
+                "availableCopies": 5,
+                "coverUrl": "test-url",
+                "authorId": 1,
+                "categoryId": 1
+            }
+            book_response = httpRequest.make_post_request('/books', book_payload)
+            book_data = book_response.json()
+            created_book_ids.append(book_data['bookId'])
+
+            borrow_payload = {
+                "userId": user_data['userId'],
+                "bookId": book_data['bookId'],
+                "borrowDate": "2023-01-01",
+                "returnDate": None
+            }
+            borrow_response = httpRequest.make_post_request(ENDPOINT, borrow_payload)
+            borrow_data = borrow_response.json()
+            created_borrow_ids.append(borrow_data['borrowId'])
+
+        # Get active loans
+        active_loans_response = httpRequest.make_get_request(ENDPOINT + '/active')
+        active_loans_data = active_loans_response.json()
+
+        assert active_loans_response.status_code == 200
+        assert len(active_loans_data) >= n  # There might be other active loans in the system
+    finally:
+        # Cleanup
+        for _id in created_borrow_ids:
+            response = httpRequest.make_delete_request(ENDPOINT + '/id', _id)
+            assert response.status_code == 204
+        for _id in created_book_ids:
+            response = httpRequest.make_delete_request('/books/id', _id)
+            assert response.status_code == 204
+        for _id in created_user_ids:
+            response = httpRequest.make_delete_request('/users/id', _id)
+            assert response.status_code == 204
+    pass
