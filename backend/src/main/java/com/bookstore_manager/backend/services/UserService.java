@@ -41,15 +41,15 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserDTO findByEmail(String email) {
-        UserMinProjection projection = userRepository.findByEmail(email);
+    public UserDTO findByName(String name) {
+        UserMinProjection projection = userRepository.findByName(name);
         UserDTO dto = new UserDTO(projection);
         return dto;
     }
 
     @Transactional(readOnly = true)
-    public UserDTO findByUsername(String username) {
-        UserMinProjection projection = userRepository.findByUsername(username);
+    public UserDTO findByEmail(String email) {
+        UserMinProjection projection = userRepository.findProjectionByEmail(email);
         UserDTO dto = new UserDTO(projection);
         return dto;
     }
@@ -98,6 +98,9 @@ public class UserService {
         entity.setName(dto.getName());
         entity.setEmail(dto.getEmail());
         entity.setPhone(dto.getPhone());
+        entity.setUsername(dto.getUsername());
+        entity.setPassword(dto.getHashPassword());
+        entity.setRole(dto.getRole());
     }
 
     // SEARCH
