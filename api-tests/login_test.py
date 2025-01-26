@@ -1,27 +1,41 @@
 import requests
 
-base_url = "localhost:8080/api"
-endpoint = "/auth/login"
+class TestAuth:
+    def __init__(self, base_url):
+        self.base_url = base_url
+        self.token = None
 
-login_data = {
-    "username": "b_2002",
-    "password": "02040638"
-}
+    def authenticate(self):
+        login_data = {
+            "username": "",
+            "password": ""
+        }
+        
+        headers = {"Content-Type": "application/json"}
+        
+        try:
+            response = requests.post(f"{self.base_url}/api/auth/login", json=login_data, headers=headers)
+            response.raise_for_status()
+            self.token = response.json().get("token")
+            return self.token
+        except requests.exceptions.RequestException as e:
+            print(f"Error during authentication: {e}")
+            return None
+        
+    def get_headers(self):
+        if not self.token:
+            self.authenticate()
+        return {"Authorization": f"Bearer {self.token}"}
 
-try:
-    response = requests.post(f"{base_url}{endpoint}", json=login_data)
-    response.raise_for_status()
-    
-    token = response.json().get("token")
-    
-    if not token:
-        raise ValueError("Token not found in response")
-    
-    headers = {"Authorization":f"Bearer {token}"}
-    
-    print(token)
-    
-except requests.exceptions.RequestException as e:
-    print(f"Erro na requisição: {e}")
-except ValueError as ve:
-    print(ve)
+myTestAuth = TestAuth("http://localhost:8080")
+
+myToken = myTestAuth.authenticate()
+
+print(myToken)
+my_headers = myTestAuth.get_headers()
+
+response = requests.get(url="http://localhost:8080/api/users", headers=my_headers)
+
+
+print(response.status_code)
+print(response.json())

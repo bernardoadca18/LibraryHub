@@ -1,6 +1,7 @@
 package com.bookstore_manager.backend.infra.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,13 +13,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
 
+    @Value("${jwt.expiration}")
+    private String jwtExpiration;
+
     @Autowired
     private SecurityFilter securityFilter;
+
+    @Value("${api.security.token.secret}")
+    private String secret;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -26,16 +35,11 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                // Public endpoints
-                // .requestMatchers("/api/auth/login").permitAll()
-                // // Admin-only endpoints
-                // .requestMatchers("/api/auth/register").hasRole("ADMIN")
-                // .requestMatchers("/api/users/**", "/api/authors/**", "/api/books/**", "/api/borrows/**").hasRole("ADMIN")
-                // // General endpoints (authenticated users)
-                // .requestMatchers("/api/borrows/user/**").hasAnyRole("USER", "ADMIN")
-                //// Any other request requires authentication
-                .anyRequest()//.authenticated()
-                .permitAll()
+                .requestMatchers("/api/auth/login").permitAll()
+                .requestMatchers("/api/auth/register").hasRole("ADMIN")
+                .requestMatchers("/api/users/**", "/api/authors/**", "/api/books/**", "/api/borrows/**").hasRole("ADMIN")
+                .requestMatchers("/api/borrows/user/**").hasAnyRole("USER", "ADMIN")
+                .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -48,6 +52,13 @@ public class SecurityConfigurations {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
+    }
+
+    @Bean
+    public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowUrlEncodedSlash(true);
+        return firewall;
     }
 }

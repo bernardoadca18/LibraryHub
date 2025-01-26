@@ -13,15 +13,13 @@ import com.bookstore_manager.backend.repositories.UserRepository;
 
 public class DataLoader {
 
-        @Bean
-        public CommandLineRunner loadData(UserRepository userRepository) {
+    @Bean
+    public CommandLineRunner loadData(UserRepository userRepository) {
 
         return args -> {
-        List<User> users = userRepository.saveAll(List.of(
-                new User("Bernardo Alves", "bernardo.alves@example.com", "b_2002", "02040638", "ADMIN", "(61) 9 6161-6161")
-        ));
-
+            List<User> users = userRepository.saveAll(List.of(
+                    new User("Bernardo Alves", "bernardo.alves@example.com", "b_2002", "02040638", "ADMIN", "(61) 9 6161-6161")
+            ));
         };
-
-        }
+    }
 }

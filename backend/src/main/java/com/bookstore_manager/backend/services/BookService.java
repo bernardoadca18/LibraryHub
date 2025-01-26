@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ import com.bookstore_manager.backend.repositories.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@CacheConfig(cacheNames = {"books"})
 public class BookService {
 
     @Autowired
@@ -35,6 +39,7 @@ public class BookService {
     private CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
+    @Cacheable(key = "#root.method.name")
     public List<BookDTO> findAll() {
         List<Book> result = bookRepository.findAll();
         List<BookDTO> dto = result.stream().map(x -> new BookDTO(x)).toList();
@@ -43,6 +48,7 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(key = "#id")
     public BookDTO findById(Long id) {
         Book result = bookRepository.findById(id).get();
         BookDTO dto = new BookDTO(result);
@@ -95,6 +101,7 @@ public class BookService {
 
     // CREATE
     @Transactional
+    @CacheEvict(allEntries = true)
     public BookDTO create(BookDTO dto) {
         Book entity = new Book();
         copyDtoToEntity(dto, entity);

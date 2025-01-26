@@ -1,9 +1,13 @@
 package com.bookstore_manager.backend.controllers.auth;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,16 +35,25 @@ public class AuthenticationController {
     @Autowired
     private TokenService tokenService;
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
+
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
-        var auth = this.authenticationManager.authenticate(usernamePassword);
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data) throws AuthenticationException {
+        try {
+            var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
+            var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        User user = (User) auth.getPrincipal();
+            User user = (User) auth.getPrincipal();
 
-        var token = tokenService.generateToken(user);
+            var token = tokenService.generateToken(user);
 
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+            logger.info("User {} logged in successfully.", user.getUsername());
+
+            return ResponseEntity.ok(new LoginResponseDTO(token));
+        } catch (AuthenticationException e) {
+            logger.warn("Failed login attempt.");
+            throw new BadCredentialsException("Invalid credentials");
+        }
     }
 
     @PostMapping("/register")

@@ -1,9 +1,53 @@
 import requests
+import os
 from requests.exceptions import JSONDecodeError
 
-class HttpRequest:
-    def __init__(self, base_url):
+import requests
+#######################################################################################################################################
+
+URL = 'http://127.0.0.1:8080/api'
+
+#######################################################################################################################################
+class TestAuth:
+    def __init__(self, base_url, username, password):
         self.base_url = base_url
+        self.token = None
+        self.username = username
+        self.password = password
+
+    def authenticate(self):
+        login_data = {
+            "username": f"{self.username}",
+            "password": f"{self.password}"
+        }
+        
+        headers = {"Content-Type": "application/json"}
+        
+        try:
+            response = requests.post(f"{self.base_url}/auth/login", json=login_data, headers=headers)
+            response.raise_for_status()
+            self.token = response.json().get("token")
+            return self.token
+        except requests.exceptions.RequestException as e:
+            print(f"Error during authentication: {e}")
+            return None
+        
+    def get_headers(self):
+        if not self.token:
+            self.authenticate()
+        return {"Content-Type": "application/json", "Authorization": f"Bearer {self.token}"}
+#######################################################################################################################################
+TEST_USERNAME = os.getenv("TEST_USERNAME")
+TEST_PASSWORD = os.getenv("TEST_PASSWORD")
+testAuth = TestAuth(base_url=URL, username=TEST_USERNAME, password=TEST_PASSWORD)
+headers = testAuth.get_headers()
+
+#######################################################################################################################################
+
+class HttpRequest:
+    def __init__(self, base_url, headers):
+        self.base_url = base_url
+        self.headers = headers
 
     def make_get_request(self, endpoint, params=None):
         final_url = self.base_url + endpoint
@@ -13,7 +57,7 @@ class HttpRequest:
         else:
             print("Making Request: \nGET ", final_url, "\n")
 
-        response = requests.get(final_url, timeout=5, params=params)
+        response = requests.get(final_url, timeout=5, params=params, headers=self.headers)
 
         if response.status_code == 200:
             print("GET Response: ", response.json(), "\nStatus Code: ", response.status_code)
@@ -27,10 +71,10 @@ class HttpRequest:
 
         if params:
             print("Making Request: \nPOST ", final_url, '\nParams: ', params, '\nData: ', data, "\n")
-            response = requests.post(final_url, params=params, json=data, timeout=5)
+            response = requests.post(final_url, params=params, json=data, timeout=5, headers=self.headers)
         else:
             print("Making Request: \nPOST ", final_url, '\nData: ', data, "\n")
-            response = requests.post(final_url, json=data, timeout=5)
+            response = requests.post(final_url, json=data, timeout=5, headers=self.headers)
 
         if response.status_code in [200, 201]:
             try:
@@ -52,7 +96,7 @@ class HttpRequest:
 
         print("Making Request: \nPUT ", final_url, '\n Data: ', data, "\n")
 
-        response = requests.put(final_url, json=data, timeout=5)
+        response = requests.put(final_url, json=data, timeout=5, headers=self.headers)
 
         if response.status_code == 200:
             print("PUT Response:", response.json())
@@ -67,7 +111,7 @@ class HttpRequest:
 
         print("Making Request: \nDELETE ", final_url, "\n")
 
-        response = requests.delete(final_url, timeout=5)
+        response = requests.delete(final_url, timeout=5, headers=self.headers)
 
         if response.status_code == 204:
             print("DELETE Response: Success")
@@ -77,8 +121,7 @@ class HttpRequest:
         return response
 
 #######################################################################################################################################
-URL = 'http://127.0.0.1:8080/api'
-httpRequest = HttpRequest(URL)
+httpRequest = HttpRequest(URL, headers=headers)
 #######################################################################################################################################
 #   AUTHORS
 #######################################################################################################################################
