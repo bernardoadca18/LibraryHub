@@ -2,6 +2,8 @@ package com.bookstore_manager.backend.repositories;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -22,11 +24,15 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
            b.category_id AS categoryId, 
            b.author_id AS authorId, 
            a.name AS authorName,
-           c.name AS categoryName
+           c.name AS categoryName,
+           AVG(r.rating) AS averageRating,
+           COUNT(r.rating) AS ratingCount
     FROM books AS b
     LEFT JOIN authors AS a ON b.author_id = a.author_id
     LEFT JOIN categories AS c ON b.category_id = c.category_id
+    LEFT JOIN ratings AS r ON b.book_id = r.book_id
     WHERE b.category_id = :categoryId
+    GROUP BY b.book_id
     ORDER BY b.title
 """)
     List<BookMinProjection> findByCategoryId(Long categoryId);
@@ -41,11 +47,15 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
            b.category_id AS categoryId, 
            b.author_id AS authorId, 
            a.name AS authorName,
-           c.name AS categoryName
+           c.name AS categoryName,
+           AVG(r.rating) AS averageRating,
+           COUNT(r.rating) AS ratingCount
     FROM books AS b
     LEFT JOIN authors AS a ON b.author_id = a.author_id
     LEFT JOIN categories AS c ON b.category_id = c.category_id
+    LEFT JOIN ratings AS r ON b.book_id = r.book_id
     WHERE b.author_id = :authorId
+    GROUP BY b.book_id
     ORDER BY b.title
 """)
     List<BookMinProjection> findByAuthorId(Long authorId);
@@ -72,4 +82,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
 
     @Query("SELECT COUNT(b) FROM Book b")
     Long getBookCount();
+
+    @Query("SELECT b FROM Book b ORDER BY b.averageRating DESC")
+    Page<Book> findAllByOrderByAverageRatingDesc(Pageable pageable);
 }

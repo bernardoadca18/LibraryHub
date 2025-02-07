@@ -15,6 +15,8 @@ public class BookDTO {
     private Long categoryId;
     private String authorName;
     private String categoryName;
+    private Double averageRating;
+    private Integer ratingCount;
 
     public BookDTO() {
     }
@@ -30,6 +32,8 @@ public class BookDTO {
         this.categoryId = entity.getCategory().getCategoryId();
         this.authorName = entity.getAuthor().getName();
         this.categoryName = entity.getCategory().getName();
+        this.averageRating = entity.getAverageRating();
+        this.ratingCount = entity.getRatingCount();
     }
 
     public BookDTO(BookMinProjection projection) {
@@ -43,7 +47,8 @@ public class BookDTO {
         this.categoryId = projection.getCategoryId();
         this.authorName = projection.getAuthorName();
         this.categoryName = projection.getCategoryName();
-
+        this.averageRating = projection.getAverageRating();
+        this.ratingCount = projection.getRatingCount();
     }
 
     public Long getBookId() {
@@ -126,4 +131,19 @@ public class BookDTO {
         this.categoryName = categoryName;
     }
 
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public Integer getRatingCount() {
+        return ratingCount;
+    }
+
+    public void setRatingCount(Integer ratingCount) {
+        this.ratingCount = ratingCount;
+    }
 }

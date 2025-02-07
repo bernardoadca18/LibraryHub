@@ -8,7 +8,7 @@ import requests
 URL = 'http://127.0.0.1:8080/api'
 
 #######################################################################################################################################
-class TestAuth:
+class Auth:
     def __init__(self, base_url, username, password):
         self.base_url = base_url
         self.token = None
@@ -39,7 +39,7 @@ class TestAuth:
 #######################################################################################################################################
 TEST_USERNAME = os.getenv("TEST_USERNAME")
 TEST_PASSWORD = os.getenv("TEST_PASSWORD")
-testAuth = TestAuth(base_url=URL, username=TEST_USERNAME, password=TEST_PASSWORD)
+testAuth = Auth(base_url=URL, username=TEST_USERNAME, password=TEST_PASSWORD)
 headers = testAuth.get_headers()
 
 #######################################################################################################################################
@@ -2000,3 +2000,60 @@ def test_can_update_borrow_task(httpRequest=httpRequest, ENDPOINT=BORROW_ENDPOIN
             response = httpRequest.make_delete_request("/categories" + '/id', _id)
             assert response.status_code == 204
     pass
+
+##
+
+def test_can_get_book_statistics(httpRequest=httpRequest, ENDPOINT="/books"):
+    response = httpRequest.make_get_request(f"{ENDPOINT}/stats")
+    data = response.json()
+    
+    assert response.status_code == 200
+    assert isinstance(data, dict)
+    assert "totalBooks" in data
+    assert "availableBooks" in data
+
+def test_can_get_overdue_loans(httpRequest=httpRequest, ENDPOINT="/borrows"):
+    response = httpRequest.make_get_request(f"{ENDPOINT}/overdue")
+    
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+
+def test_can_get_books_by_category(httpRequest=httpRequest, ENDPOINT="/categories"):
+    created_category_ids = []
+    try:
+        # Criar categoria
+        category_payload = {
+            "name": "Test Category"
+        }
+        category_response = httpRequest.make_post_request(ENDPOINT, category_payload)
+        created_category_ids.append(category_response.json()["categoryId"])
+
+        # Buscar livros por categoria
+        response = httpRequest.make_get_request(f"{ENDPOINT}/id/{category_response.json()['categoryId']}/books")
+        
+        assert response.status_code == 200
+        assert isinstance(response.json(), list)
+    finally:
+        for category_id in created_category_ids:
+            httpRequest.make_delete_request(f"{ENDPOINT}/id", category_id)
+
+
+def test_can_get_books_by_author(httpRequest=httpRequest, ENDPOINT="/authors"):
+    created_author_ids = []
+    try:
+        # Criar autor
+        author_payload = {
+            "name": "Test Author",
+            "birthDate": "2000-01-01"
+        }
+        author_response = httpRequest.make_post_request(ENDPOINT, author_payload)
+        created_author_ids.append(author_response.json()["authorId"])
+
+        # Buscar livros por autor
+        response = httpRequest.make_get_request(f"{ENDPOINT}/id/{author_response.json()['authorId']}/books")
+        
+        assert response.status_code == 200
+        assert isinstance(response.json(), list)
+    finally:
+        for author_id in created_author_ids:
+            httpRequest.make_delete_request(f"{ENDPOINT}/id", author_id)
