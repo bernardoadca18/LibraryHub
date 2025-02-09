@@ -1,0 +1,13 @@
+.buttonAuth {
+    background-color: #333333;
+    color: white;
+}
+
+.buttonAuth:hover {
+    background-color: #555555;
+    cursor: pointer;
+}
+
+.buttonAuth:active {
+    background-color: #111111;
+}

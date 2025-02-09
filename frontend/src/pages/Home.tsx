@@ -62,7 +62,7 @@ const Home = () : React.ReactNode => {
             </div>
 
 
-            <div className='max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8'>
+            <div className='max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 '>
                 <h2 className='text-2xl font-bold text-slate-800 mb-6'>Top Rated Books</h2>
                 <div className='flex overflow-x-auto gap-6 pb-4'>
                     {Array.isArray(topRatedBooks) && topRatedBooks.map((book : BookData, index : number) => (
