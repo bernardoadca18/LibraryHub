@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import 'bootstrap/dist/js/bootstrap.bundle.min'
 import "bootstrap-icons/font/bootstrap-icons.css"
@@ -9,10 +9,36 @@ const menus = ['HOME', 'CATEGORIES', 'BOOKS']
 const links = ['/']
 
 const Header = () : React.ReactNode => {
-    const { isAuthenticated } = useAuthStore();
+    const { isAuthenticated, logout } = useAuthStore();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
+    }
+
+    const handleClickOutsideDropdown = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node))
+        {
+            setIsDropdownOpen(false);
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutsideDropdown);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutsideDropdown);
+        };
+    }, []);
+
     const CheckAuth = () => {
         
         console.log(isAuthenticated)
+    }
+
+    const handleLogout = () => {
+        logout();
+        setIsDropdownOpen(false);
     }
 
     return (
@@ -34,13 +60,20 @@ const Header = () : React.ReactNode => {
                             <i className='bi bi-search absolute right-3 top-2.5 text-slate-400'></i>
                         </div>
                         {
-                            useAuthStore(state => state.isAuthenticated) ? (
-                                <div className="dropdown">
-                                    
-                                    <button className="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            isAuthenticated ? (
+                                <div className="dropdown" ref={dropdownRef} style={{position: 'relative'}} >
+                                    <button className="btn btn-link dropdown-toggle cursor-pointer p-2" type="button" onClick={toggleDropdown}>
                                         {getUsernameFromToken()}
                                     </button>
-                                    
+                                    {
+                                        isDropdownOpen && (
+                                            <div className='dropdown-menu show bg-white p-2' style={{width: '100%', display: 'flex', flexDirection: 'column', position: 'absolute', left: 0, justifyContent: 'flex-start'}}>
+                                                <button className='dropdown-item cursor-pointer py-2 border-b border-slate-200 hover:bg-slate-100'>Perfil</button>
+                                                <button className='dropdown-item cursor-pointer py-2 border-b border-slate-200 hover:bg-slate-100'>Configurações</button>
+                                                <button className='dropdown-item cursor-pointer py-2 border-b border-slate-200 hover:bg-slate-100' onClick={handleLogout}>Logout</button>
+                                            </div>
+                                        )
+                                    }
                                 </div>
                             ) : (
                                 <>
