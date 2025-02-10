@@ -48,6 +48,8 @@ public class SecurityConfigurations {
                 //.requestMatchers("/api/borrows/user/**").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/api/books/count").permitAll()
                 .requestMatchers("/api/books/top-rated").permitAll()
+                .requestMatchers("/api/health").permitAll()
+                .requestMatchers("/api/token/validate").permitAll()
                 .anyRequest().permitAll()//.authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

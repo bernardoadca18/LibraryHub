@@ -6,14 +6,22 @@ import Layout from './components/Layout.tsx'
 import Home from './pages/Home'
 import Login from './pages/Login.tsx'
 import Register from './pages/Register.tsx'
+import { removeToken } from './services/Auth.ts'
 
 
 const App = () => {
-  const initialize = useAuthStore(state => state.initialize);
   
   useEffect(() => {
+    const initialize = () => {
+      try {
+          useAuthStore.getState().initialize();
+      } catch {
+          removeToken();
+          useAuthStore.getState().logout();
+      }
+  };
     initialize();
-  }, [initialize]);
+  }, []);
   
   return (
     <BrowserRouter>

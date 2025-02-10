@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { getToken, removeToken, storeToken } from './Auth';
+import axios from 'axios';
+import { API_BASE_URL } from './Api.ts';
 
 interface AuthState {
     token: string | null;
@@ -23,9 +25,30 @@ const useAuthStore = create<AuthState>((set) => ({
         set({ token: null, isAuthenticated: false })
     },
 
-    initialize: () => {
+    initialize: async () => {
         const token = getToken();
-        set({ token, isAuthenticated: !!token })
+        if (token) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/token/validate`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+    
+                if (response.data) {
+                    set({ token, isAuthenticated: true });
+                } else {
+                    removeToken();
+                    set({ token: null, isAuthenticated: false });
+                }
+            } catch {
+                removeToken();
+                set({ token: null, isAuthenticated: false });
+            }
+        } else {
+            removeToken();
+            set({ token: null, isAuthenticated: false });
+        }
     }
 }));
 
