@@ -41,16 +41,23 @@ public class SecurityConfigurations {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                // Endpoints públicos
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/auth/login").permitAll()
-                //.requestMatchers("/api/auth/register").hasRole("ADMIN")
-                //.requestMatchers("/api/users/**", "/api/authors/**", "/api/books/**", "/api/borrows/**").hasRole("ADMIN")
-                //.requestMatchers("/api/borrows/user/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/api/auth/register-user").permitAll()
                 .requestMatchers("/api/books/count").permitAll()
+                .requestMatchers("/api/categories/count").permitAll()
+                .requestMatchers("/api/authors/count").permitAll()
                 .requestMatchers("/api/books/top-rated").permitAll()
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/api/token/validate").permitAll()
-                .anyRequest().permitAll()//.authenticated()
+                // Endpoints específicos para ADMIN
+                .requestMatchers("/api/auth/register").hasRole(SecurityConstants.ROLE_ADMIN)
+                .requestMatchers("/api/users/**", "/api/authors/**", "/api/books/**", "/api/borrows/**").hasRole(SecurityConstants.ROLE_ADMIN)
+                // Endpoints específicos para USER e ADMIN
+                .requestMatchers("/api/borrows/user/**").hasAnyRole(SecurityConstants.ROLE_USER, SecurityConstants.ROLE_ADMIN)
+                // Qualquer outra requisição deve ser autenticada
+                .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers(headers -> headers.frameOptions().disable())

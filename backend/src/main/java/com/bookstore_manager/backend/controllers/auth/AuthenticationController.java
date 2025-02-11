@@ -65,10 +65,27 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body("Email already exists.");
         }
 
-        User newUser = new User(data.name(), data.email(), data.username(), data.password(), data.role(), data.phone());
+        User newUser = new User(data.name(), data.email(), data.username(), data.password(), "ADMIN", data.phone());
 
         this.userRepository.save(newUser);
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/register-user")
+    public ResponseEntity registerUser(@RequestBody @Valid RegisterDTO data) {
+        {
+            if (this.userRepository.findByUsername(data.username()) != null) {
+                return ResponseEntity.badRequest().body("Username already exists.");
+            }
+            if (this.userRepository.findByEmail(data.email()) != null) {
+                return ResponseEntity.badRequest().body("Email already exists.");
+            }
+
+            User newUser = new User(data.name(), data.email(), data.username(), data.password(), "USER", data.phone());
+
+            this.userRepository.save(newUser);
+            return ResponseEntity.ok().build();
+        }
+
+    }
 }

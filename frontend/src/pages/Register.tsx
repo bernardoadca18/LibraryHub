@@ -2,7 +2,7 @@ import React from 'react'
 import AuthButton from '../components/Auth/AuthButton.tsx'
 import AuthInput from '../components/Auth/AuthInput.tsx'
 import { Link, useNavigate } from 'react-router-dom'
-import { register } from '../services/AuthService.ts'
+import { registerUser } from '../services/AuthService.ts'
 
 const Register = () => {
 	const [name, setName] = React.useState('')
@@ -16,7 +16,7 @@ const Register = () => {
 	const handleRegister = async () => {
 		try 
 		{
-			await register(
+			await registerUser(
 				{
 					name,
 					email,

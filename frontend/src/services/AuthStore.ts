@@ -6,15 +6,17 @@ import { API_BASE_URL } from './Api.ts';
 interface AuthState {
     token: string | null;
     isAuthenticated: boolean;
+    darkTheme: boolean;
     login: (token: string) => void;
     logout: () => void;
     initialize: () => void;
+    toggleTheme: () => void;
 }
 
 const useAuthStore = create<AuthState>((set) => ({
     token: null,
     isAuthenticated: false,
-
+    darkTheme : false,
     login: (token) => {
         storeToken(token);
         set({ token, isAuthenticated: true })
@@ -49,7 +51,8 @@ const useAuthStore = create<AuthState>((set) => ({
             removeToken();
             set({ token: null, isAuthenticated: false });
         }
-    }
+    },
+    toggleTheme: () => set((state) => ({ darkTheme: !state.darkTheme })),
 }));
 
 

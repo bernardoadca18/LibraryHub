@@ -42,10 +42,28 @@ export const login = async (loginData: LoginData): Promise<LoginResponse> => {
     }
 };
 
-// Registro de novo usuário
+// Registro de novo administrador
 export const register = async (registerData: RegisterData): Promise<void> => {
     try {
         await axios.post(`${API_BASE_URL}/register`, registerData, {
+            headers : {
+                "Content-Type": "application/json",
+                "Accept" : "application/json"
+            }
+        });
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            const serverMessage = error.response?.data?.message || 'Erro desconhecido no servidor';
+            throw new Error(`Erro no registro: ${serverMessage}`);
+        }
+        console.error('Erro no registro:', error);
+        throw error;
+    }
+};
+
+export const registerUser = async (registerData: RegisterData): Promise<void> => {
+    try {
+        await axios.post(`${API_BASE_URL}/register-user`, registerData, {
             headers : {
                 "Content-Type": "application/json",
                 "Accept" : "application/json"

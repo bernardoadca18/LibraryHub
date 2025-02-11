@@ -34,35 +34,4 @@ api.interceptors.request.use(config => {
     return config;
 });
 
-api.interceptors.request.use(async config => {
-    const token = getToken();
-    if (token) {
-        // Verifica se o token é válido com o backend
-        try {
-            const response = await axios.get(`${API_BASE_URL}/token/validate`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            if (!response.data) {
-                // Token inválido, remove o token e redireciona para o login
-                removeToken();
-                window.location.href = '/login';
-                return config;
-            }
-        } catch (error) {
-            // Erro na validação do token, remove o token e redireciona para o login
-            console.log(error);
-            removeToken();
-            window.location.href = '/login';
-            return config;
-        }
-
-        // Token válido, adiciona o token ao cabeçalho da requisição
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});
-
 export default api;
