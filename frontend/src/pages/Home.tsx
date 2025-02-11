@@ -4,9 +4,11 @@ import DescriptiveCard from '../components/Home/DescriptiveCard.tsx';
 import { fetchBooksCount, fetchTopRatedBooks } from '../services/BookService.ts';
 import { fetchCategoryCount } from '../services/CategoryService.ts';
 import BookCard from '../components/BookCard.tsx';
-import {BookData} from '../services/BookService.ts'
+import {BookData} from '../services/BookService.ts';
+import {CategoryData, fetchAllCategories} from '../services/CategoryService.ts';
 import useAuthStore from '../services/AuthStore.ts';
 import styles from './Home.module.css'
+import CategoryCard from '../components/CategoryCard.tsx';
 
 
 const Home = () : React.ReactNode => {
@@ -14,6 +16,7 @@ const Home = () : React.ReactNode => {
     const [bookCount, setBookCount] = useState<number>(0);
     const [categoryCount, setCategoryCount] = useState<number>(0);
     const [topRatedBooks, setTopRatedBooks] = useState<BookData[]>([]);
+    const [categories, setCategories] = useState<CategoryData[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
     const colors = darkTheme
@@ -43,15 +46,17 @@ const Home = () : React.ReactNode => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [booksCount, categoriesCount, topRated] = await Promise.all([
+                const [booksCount, categoriesCount, topRated, categories] = await Promise.all([
                     fetchBooksCount(),
                     fetchCategoryCount(),
-                    fetchTopRatedBooks(1, 20)
+                    fetchTopRatedBooks(1, 20),
+                    fetchAllCategories()
                 ]);
 
                 setBookCount(booksCount);
                 setCategoryCount(categoriesCount);
                 setTopRatedBooks(topRated);
+                setCategories(categories);
             } catch (error) {
                 console.error('Error fetching data:', error);
             } finally {
@@ -103,6 +108,19 @@ const Home = () : React.ReactNode => {
                                     category={book.categoryName}
                                     darkTheme={darkTheme}
                                 />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            <div className='p-4'>
+                <div className={`${colors.class} max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8`}>
+                    <h2 className={`text-2xl font-bold mb-6 ${colors.sectionText}`}>Categories</h2>
+                    <div className='flex overflow-x-auto gap-6 pb-4'>
+                        {Array.isArray(categories) && categories.map((category : CategoryData, index : number) => (
+                            <div key={index} className='flex-shrink-0 w-48'>
+                                <CategoryCard name={category.name}></CategoryCard>
                             </div>
                         ))}
                     </div>

@@ -141,11 +141,11 @@ const Header = () : React.ReactNode => {
                         )}
                         {
                             darkTheme ? (
-                                <button onClick={changeTheme}>
+                                <button onClick={changeTheme} className='w-2'>
                                     <i className={`bi bi-brightness-high-fill cursor-pointer p-4 text-3xl ${colors.lightbulbIconColor}`}></i>
                                 </button>
                             ) : (
-                                <button onClick={changeTheme}>
+                                <button onClick={changeTheme} className='w-2'>
                                     <i className={`bi bi-moon-fill cursor-pointer p-4 text-2xl ${colors.lightbulbIconColor}`}></i>
                                 </button>
                             )

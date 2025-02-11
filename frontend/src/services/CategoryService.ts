@@ -3,7 +3,7 @@ import { getToken, isTokenValid } from './Auth.ts';
 
 const API_BASE_URL = 'http://localhost:8080/api/categories';
 
-interface CategoryData {
+export interface CategoryData {
     name: string;
 }
 

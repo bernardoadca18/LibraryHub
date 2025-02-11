@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -51,7 +52,9 @@ public class SecurityConfigurations {
                 .requestMatchers("/api/books/top-rated").permitAll()
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/api/token/validate").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/categories").permitAll() // Permite apenas GET
                 // Endpoints específicos para ADMIN
+                .requestMatchers("/api/categories/**").hasRole(SecurityConstants.ROLE_ADMIN)
                 .requestMatchers("/api/auth/register").hasRole(SecurityConstants.ROLE_ADMIN)
                 .requestMatchers("/api/users/**", "/api/authors/**", "/api/books/**", "/api/borrows/**").hasRole(SecurityConstants.ROLE_ADMIN)
                 // Endpoints específicos para USER e ADMIN

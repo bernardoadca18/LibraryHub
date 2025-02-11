@@ -4,6 +4,7 @@ import AuthInput from '../components/Auth/AuthInput.tsx'
 import { Link, useNavigate } from 'react-router-dom'
 import { registerUser } from '../services/AuthService.ts'
 import useAuthStore from '../services/AuthStore.ts'
+import styles from './Register.module.css'
 
 const Register = () => {
 	const [name, setName] = React.useState('')
@@ -14,6 +15,14 @@ const Register = () => {
 
 	const navigate = useNavigate();
 	const {darkTheme} = useAuthStore();
+
+	const colors = darkTheme
+	? {
+	    class: styles.light,
+	}
+	: {
+	    class: styles.dark,
+	};
 
 
 	const handleRegister = async () => {
@@ -48,7 +57,7 @@ const Register = () => {
 
 	return (
     <>
-		<div className='w-full flex flex-col justify-center mt-16 p-8 gap-4 '>
+		<div className={`${colors.class} w-full flex flex-col justify-center mt-16 p-8 gap-4`}>
 			<h1 className='self-center text-4xl mb-4'>{"Create an account"}</h1>
 			<AuthInput darkTheme={darkTheme} text='Name' value={name} onChange={(e) => setName(e.target.value)}></AuthInput>
 			<AuthInput darkTheme={darkTheme} text='E-mail' value={email} onChange={(e) => setEmail(e.target.value)}></AuthInput>

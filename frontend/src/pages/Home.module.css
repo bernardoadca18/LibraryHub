@@ -1,9 +1,4 @@
 .dark {
     background-color: #040404;
-    border-top-right-radius: 2rem;
-    border-top-left-radius: 2rem;
-}
-
-.light {
-
+    border-radius: 2rem;
 }
