@@ -29,13 +29,13 @@ const Header = () : React.ReactNode => {
 
     const setDarkThemeElements = () => {
         setColors({
-            background: 'bg-gray-900',
+            background: 'bg-black',
             shadow: 'shadow-sm',
             text: 'text-gray-100',
             hoverText: 'hover:text-white',
             border: 'border-gray-700',
             focusRing: 'focus:ring-gray-500',
-            dropdownBackground: 'bg-gray-800',
+            dropdownBackground: 'bg-black',
             dropdownHover: 'hover:bg-gray-700',
             dropdownBorder: 'border-gray-700',
             lightbulbIconColor: 'text-white',
@@ -99,7 +99,7 @@ const Header = () : React.ReactNode => {
     }
 
     return (
-        <header className={`${colors.background} ${colors.shadow} fixed w-full top-0`}>
+        <header className={`${colors.background} ${colors.shadow} fixed w-full top-0 border-b ${colors.border}`}>
             <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
                 <div className='flex justify-between h-16'>
                     <div className='flex items-center'>
@@ -142,7 +142,7 @@ const Header = () : React.ReactNode => {
                         {
                             darkTheme ? (
                                 <button onClick={changeTheme}>
-                                    <i className={`bi bi-brightness-high-fill cursor-pointer p-4 text-2xl ${colors.lightbulbIconColor}`}></i>
+                                    <i className={`bi bi-brightness-high-fill cursor-pointer p-4 text-3xl ${colors.lightbulbIconColor}`}></i>
                                 </button>
                             ) : (
                                 <button onClick={changeTheme}>
