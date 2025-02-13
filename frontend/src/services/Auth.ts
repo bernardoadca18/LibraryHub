@@ -1,3 +1,5 @@
+import { fetchUserByUsername } from "./UserService.ts";
+
 export const storeToken = (token: string): void => {
     localStorage.setItem('authToken', token);
 };
@@ -27,5 +29,22 @@ export const getUsernameFromToken = (): string => {
         return payload.sub || 'Usuário';
     } catch {
         return 'Conta';
+    }
+};
+
+export const getUserIdFromToken = async (): Promise<number> => {
+    try {
+        const token = getToken();
+        if (!token || !isTokenValid(token)) return -1;
+        
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const username = payload.sub;
+        
+        const user = await fetchUserByUsername(username);
+        return user.userId;
+        
+    } catch (error) {
+        console.error('Erro ao obter ID do usuário:', error);
+        return -1;
     }
 };

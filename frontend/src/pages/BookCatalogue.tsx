@@ -1,22 +1,19 @@
 import React, {useState, useEffect} from 'react'
 import styles from './BookCatalogue.module.css'
 import Searchbar from '../components/Searchbar.tsx';
-import { searchBooks, fetchBooks, BookData } from '../services/BookService';
+import { searchBooks, fetchBooks, BookData, fetchBooksCount } from '../services/BookService';
 import { fetchAllCategories, CategoryData } from '../services/CategoryService';
 import { fetchAllAuthors, AuthorDTO } from '../services/AuthorService';
 import BookCard from '../components/BookCard';
 import useAuthStore from '../services/AuthStore';
+import { useSearchParams } from 'react-router-dom';
 
 const BookCatalogue = () : React.ReactNode => {
 
   const Pagination = () => {
     return (
       <div className="flex justify-center mt-8">
-        <button
-          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
-          disabled={currentPage === 0}
-          className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
-        >
+        <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))} disabled={currentPage === 0} className="px-4 py-2 mx-1 border rounded disabled:opacity-50">
           Anterior
         </button>
         
@@ -32,11 +29,7 @@ const BookCatalogue = () : React.ReactNode => {
           </button>
         ))}
         
-        <button
-          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages - 1))}
-          disabled={currentPage === totalPages - 1}
-          className="px-4 py-2 mx-1 border rounded disabled:opacity-50"
-        >
+        <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages - 1))} disabled={currentPage === totalPages - 1} className="px-4 py-2 mx-1 border rounded disabled:opacity-50">
           Próximo
         </button>
       </div>
@@ -62,6 +55,8 @@ const BookCatalogue = () : React.ReactNode => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 20;
+  const [loading, setLoading] = useState(true);
+  const [bookCount, setBookCount] = useState<number>(0);
 
   const colors = darkTheme
     ? {
@@ -93,22 +88,36 @@ const BookCatalogue = () : React.ReactNode => {
       class: styles.dark
     };
 
+    const [searchParams] = useSearchParams();
+  
+    useEffect(() => {
+      const categoryParam = searchParams.get('category');
+      if (categoryParam) {
+        setSelectedCategory(Number(categoryParam));
+      }
+    }, [searchParams]);
 
     useEffect(() => {
       const loadFilterOptions = async () => {
         try 
         {
-          const [categoriesData, authorsData] = await Promise.all([
+          const [categoriesData, authorsData, bookCount] = await Promise.all([
             fetchAllCategories(),
-            fetchAllAuthors()
+            fetchAllAuthors(),
+            fetchBooksCount()
           ]);
 
           setCategories(categoriesData);
           setAuthors(authorsData);
+          setBookCount(bookCount);
         } 
         catch (error)
         {
           console.error('Error loading filter options:', error);
+        }
+        finally
+        {
+          setLoading(false);
         }
       };
       loadFilterOptions();
@@ -118,12 +127,11 @@ const BookCatalogue = () : React.ReactNode => {
       const fetchFilteredBooks = async () => {
           try {
               let response;
-  
-              // Buscar todos os livros sem paginação
+
               if (searchQuery) {
                   response = await searchBooks(searchQuery);
               } else {
-                  response = await fetchBooks(0, 1000); // Número grande para pegar todos
+                  response = await fetchBooks(0, bookCount);
               }
   
               if (!response || !response.content) {
@@ -142,10 +150,8 @@ const BookCatalogue = () : React.ReactNode => {
                   return matchesCategory && matchesAuthor && matchesYear && matchesAvailability && matchesRating;
               });
   
-              // Atualizar o total de páginas com base em todos os livros filtrados
               setTotalPages(Math.ceil(filteredBooks.length / pageSize));
   
-              // Paginar os livros filtrados
               const startIndex = currentPage * pageSize;
               const endIndex = startIndex + pageSize;
               const paginatedBooks = filteredBooks.slice(startIndex, endIndex);
@@ -160,65 +166,73 @@ const BookCatalogue = () : React.ReactNode => {
       return () => clearTimeout(timeoutId);
   
   }, [searchQuery, selectedCategory, selectedAuthor, selectedYear, 
-      showAvailableOnly, minRating, currentPage, pageSize]);
+      showAvailableOnly, minRating, currentPage, pageSize, bookCount]);
 
-  return (
-    <div className=''>
-      {/* Search Bar */}
-      <div className={`mt-16 mb-4 flex flex-col items-center p-8 shadow-sm gap-4 ${colors.class}`}>
-        <h1 className={`text-3xl ${colors.text}`}>Search Books</h1>
-        <Searchbar className={''} type='text' placeholder='Search' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}></Searchbar>
-      </div>
-      {/* Filters Section */}
-      <div className='mb-4 flex flex-wrap gap-4'>
-        {/* Category Filter */}
-        <select className='p-2 border rounded' value={selectedCategory || ''} onChange={(e) => setSelectedCategory(Number(e.target.value) || null)}>
-          <option value="">All Categories</option>
-          {categories.map(category => (
-              <option key={category.categoryId} value={category.categoryId}>
-                  {category.name}
-              </option>
-          ))}
-        </select>
-
-        {/* Author Filter */}
-        <select value={selectedAuthor || ''} onChange={(e) => setSelectedAuthor(Number(e.target.value) || null)} className="p-2 border rounded" >
-            <option value="">All Authors</option>
-            {authors.map(author => (
-                <option key={author.authorId} value={author.authorId}>
-                    {author.name}
-                </option>
+  if (loading)
+  {
+    return (<div></div>);
+  }
+  else
+  {
+    return (
+      <div className={`${colors.class} ${colors.text} flex flex-col w-full`}>
+        <header className={`pb-8 shadow-sm fixed top-16 w-full z-[999] ${colors.class}`}>
+          {/* Search Bar */}
+          <div className={`mt-16 mb-4 flex flex-col items-center gap-4`}>
+            <h1 className={`text-3xl ${colors.text}`}>Search Books</h1>
+            <Searchbar className={''} type='text' placeholder='Search' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}></Searchbar>
+          </div>
+          {/* Filters Section */}
+          <div className='mb-4 flex flex-wrap gap-4 lg:justify-center lg:items-center pr-8 pl-8'>
+            {/* Category Filter */}
+            <select className={`p-2 border rounded ${colors.class}`} value={selectedCategory || ''} onChange={(e) => setSelectedCategory(Number(e.target.value) || null)}>
+              <option value="">All Categories</option>
+              {categories.map(category => (
+                  <option key={category.categoryId} value={category.categoryId}>
+                      {category.name}
+                  </option>
+              ))}
+            </select>
+    
+            {/* Author Filter */}
+            <select value={selectedAuthor || ''} onChange={(e) => setSelectedAuthor(Number(e.target.value) || null)} className={`p-2 border rounded ${colors.class}`} >
+                <option value="">All Authors</option>
+                {authors.map(author => (
+                    <option key={author.authorId} value={author.authorId}>
+                        {author.name}
+                    </option>
+                ))}
+            </select>
+    
+            {/* Year Filter */}
+            <input type="number" placeholder="Publication Year" value={selectedYear || ''} onChange={(e) => setSelectedYear(Number(e.target.value) || null)} className={`p-2 border rounded ${colors.class}`} />
+    
+            {/* Availability Filter */}
+            <label className="flex items-center">
+                <input type="checkbox" checked={showAvailableOnly} onChange={(e) => setShowAvailableOnly(e.target.checked)} className="mr-2"/>
+                Available Only
+            </label>
+    
+            {/* Rating Filter */}
+            <select value={minRating} onChange={(e) => setMinRating(Number(e.target.value))} className={`p-2 border rounded ${colors.class}`} >
+                <option value={0}>All Ratings</option>
+                <option value={3}>3+ Stars</option>
+                <option value={4}>4+ Stars</option>
+                <option value={5}>5 Stars</option>
+            </select>
+          </div>
+          {/* Pagination */}
+          {<Pagination></Pagination>}
+        </header>
+        {/* Books Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5  gap-4 mt-144 p-8">
+            {books.map((book) => (
+                <BookCard bookId={book.bookId} key={book.bookId} imageUrl={book.coverUrl} title={book.title} author={book.authorName} year={book.publishYear} category={book.categoryName} availableCopies={book.availableCopies} darkTheme={darkTheme} />
             ))}
-        </select>
-
-        {/* Year Filter */}
-        <input type="number" placeholder="Publication Year" value={selectedYear || ''} onChange={(e) => setSelectedYear(Number(e.target.value) || null)} className="p-2 border rounded" />
-
-        {/* Availability Filter */}
-        <label className="flex items-center">
-            <input type="checkbox" checked={showAvailableOnly} onChange={(e) => setShowAvailableOnly(e.target.checked)} className="mr-2"/>
-            Available Only
-        </label>
-
-        {/* Rating Filter */}
-        <select value={minRating} onChange={(e) => setMinRating(Number(e.target.value))} className="p-2 border rounded" >
-            <option value={0}>All Ratings</option>
-            <option value={3}>3+ Stars</option>
-            <option value={4}>4+ Stars</option>
-            <option value={5}>5 Stars</option>
-        </select>
+        </div>
       </div>
-
-      {/* Books Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {books.map((book) => (
-              <BookCard key={book.bookId} imageUrl={book.coverUrl} title={book.title} author={book.authorName} year={book.publishYear} category={book.categoryName} availableCopies={book.availableCopies} darkTheme={darkTheme} />
-          ))}
-      </div>
-      {/* Pagination */}
-      {<Pagination></Pagination>}
-    </div>
-  )
+    )
+  }
 }
 
 

@@ -8,6 +8,7 @@ import Login from './pages/Login.tsx'
 import Register from './pages/Register.tsx'
 import { removeToken } from './services/Auth.ts'
 import BookCatalogue from './pages/BookCatalogue.tsx'
+import BookPage from './pages/BookPage.tsx'
 
 
 const App = () => {
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/catalogue" element={<BookCatalogue />} />
+          <Route path='/book/:bookId' element={<BookPage/>}></Route>
         </Route>
       </Routes>
     </BrowserRouter>

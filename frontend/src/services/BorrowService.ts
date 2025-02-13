@@ -4,7 +4,6 @@ import { getToken, isTokenValid } from './Auth.ts';
 const API_BASE_URL = 'http://localhost:8080/api/borrows';
 
 export interface BorrowDTO {
-    id: number;
     userId: number;
     bookId: number;
     borrowDate: string;
@@ -91,6 +90,10 @@ export const fetchActiveBorrows = async () => {
 export const createBorrow = async (borrowData: BorrowDTO) => {
     try {
         const token = getToken();
+        if (!token || !isTokenValid(token)) {
+            throw new Error('Token inválido ou expirado');
+        }
+        
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
         const response = await axios.post(API_BASE_URL, borrowData, {
             headers: headers

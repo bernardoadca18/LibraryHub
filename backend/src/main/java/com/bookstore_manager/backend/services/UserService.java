@@ -48,6 +48,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public UserDTO findByUsername(String username) {
+        UserMinProjection projection = userRepository.findByUsernameWithProjection(username);
+        UserDTO dto = new UserDTO(projection);
+        return dto;
+    }
+
+    @Transactional(readOnly = true)
     public UserDTO findByEmail(String email) {
         UserMinProjection projection = userRepository.findProjectionByEmail(email);
         UserDTO dto = new UserDTO(projection);

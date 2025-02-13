@@ -99,7 +99,7 @@ const Header = () : React.ReactNode => {
     }
 
     return (
-        <header className={`${colors.background} ${colors.shadow} fixed w-full top-0 border-b ${colors.border}`}>
+        <header className={`${colors.background} ${colors.shadow} fixed w-full top-0 border-b ${colors.border} z-[1000]`}>
             <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
                 <div className='flex justify-between h-16'>
                     <div className='flex items-center'>
@@ -127,9 +127,9 @@ const Header = () : React.ReactNode => {
                                     {getUsernameFromToken()}
                                 </button>
                                 {isDropdownOpen && (
-                                    <div className={`dropdown-menu show ${colors.dropdownBackground} p-2`} style={{width: '100%', display: 'flex', flexDirection: 'column', position: 'absolute', left: 0, justifyContent: 'flex-start'}}>
-                                        <button className={`dropdown-item cursor-pointer py-2 ${colors.dropdownBorder} ${colors.dropdownHover} ${colors.text}`}>Configurações</button>
-                                        <button className={`dropdown-item cursor-pointer py-2 ${colors.dropdownBorder} ${colors.dropdownHover} ${colors.text}`} onClick={handleLogout}>Logout</button>
+                                    <div className={`dropdown-menu show ${colors.dropdownBackground} p-2`} style={{zIndex:1001, display: 'flex', flexDirection: 'column', position: 'absolute', left: 0, justifyContent: 'flex-start'}}>
+                                        <button className={`dropdown-item cursor-pointer p-2 ${colors.dropdownBorder} ${colors.dropdownHover} ${colors.text}`}>Configurações</button>
+                                        <button className={`dropdown-item cursor-pointer p-2 ${colors.dropdownBorder} ${colors.dropdownHover} ${colors.text}`} onClick={handleLogout}>Logout</button>
                                     </div>
                                 )}
                             </div>

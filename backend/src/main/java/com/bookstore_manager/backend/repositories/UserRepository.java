@@ -27,4 +27,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Query("SELECT u FROM User u WHERE u.email = :email")
     UserMinProjection findProjectionByEmail(String email);
+
+    @Query("SELECT u FROM User u WHERE u.username = :username")
+    UserMinProjection findByUsernameWithProjection(String username);
 }

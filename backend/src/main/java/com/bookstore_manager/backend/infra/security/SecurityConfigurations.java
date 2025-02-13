@@ -1,7 +1,6 @@
 package com.bookstore_manager.backend.infra.security;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +20,7 @@ import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 
 @Configuration
 @EnableWebSecurity
@@ -62,7 +62,12 @@ public class SecurityConfigurations {
                 .requestMatchers(HttpMethod.DELETE, "/api/users/**", "/api/authors/**", "/api/books/**", "/api/borrows/**").hasRole(SecurityConstants.ROLE_ADMIN)
                 // Endpoints específicos para USER e ADMIN
                 .requestMatchers("/api/borrows/user/**").hasAnyRole(SecurityConstants.ROLE_USER, SecurityConstants.ROLE_ADMIN)
+                // Endpoints Owner e Admin
+                .requestMatchers(HttpMethod.GET, "/api/users/id/{id}").access(new WebExpressionAuthorizationManager("@securityUtils.isOwnerOrAdmin(authentication,#id)"))
+                .requestMatchers(HttpMethod.PUT, "/api/users/id/{id}").access(new WebExpressionAuthorizationManager("@securityUtils.isOwnerOrAdmin(authentication,#id)"))
+                .requestMatchers(HttpMethod.DELETE, "/api/users/id/{id}").access(new WebExpressionAuthorizationManager("@securityUtils.isOwnerOrAdmin(authentication,#id)"))
                 // Qualquer outra requisição deve ser autenticada
+                .requestMatchers(HttpMethod.GET, "/api/users/username/{username}").authenticated()
                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
