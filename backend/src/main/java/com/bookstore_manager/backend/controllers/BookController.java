@@ -46,10 +46,26 @@ public class BookController {
         return result;
     }
 
+    /*
     @GetMapping
     public List<BookDTO> findAll() {
         List<BookDTO> result = bookService.findAll();
         return result;
+    }
+     */
+    @GetMapping
+    public ResponseEntity<Page<BookDTO>> findAll(
+            @PageableDefault(page = 0, size = 10, sort = "title", direction = Direction.ASC) Pageable pageable) {
+        Page<BookDTO> result = bookService.findAll(pageable);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<BookDTO>> searchBooks(
+            @RequestParam(required = false) String title,
+            @PageableDefault(page = 0, size = 10, sort = "title", direction = Direction.ASC) Pageable pageable) {
+        Page<BookDTO> result = bookService.searchBooks(title, pageable);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping(value = "/category/{categoryId}")
@@ -97,12 +113,13 @@ public class BookController {
     }
 
     //
+    /*
     @GetMapping("/search")
     public ResponseEntity<List<BookDTO>> searchBooks(@RequestParam(required = false) String title) {
         List<BookDTO> result = bookService.searchBooks(title);
         return ResponseEntity.ok(result);
     }
-
+     */
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getBookStatistics() {
         return ResponseEntity.ok(bookService.getBookStatistics());

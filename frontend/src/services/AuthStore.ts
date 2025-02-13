@@ -16,7 +16,7 @@ interface AuthState {
 const useAuthStore = create<AuthState>((set) => ({
     token: null,
     isAuthenticated: false,
-    darkTheme : false,
+    darkTheme : true,
     login: (token) => {
         storeToken(token);
         set({ token, isAuthenticated: true })

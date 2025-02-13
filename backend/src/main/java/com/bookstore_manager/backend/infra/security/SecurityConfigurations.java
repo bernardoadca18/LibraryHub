@@ -52,11 +52,14 @@ public class SecurityConfigurations {
                 .requestMatchers("/api/books/top-rated").permitAll()
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/api/token/validate").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/categories").permitAll() // Permite apenas GET
+                .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/authors/**", "/api/books/**", "/api/borrows/**").permitAll()
                 // Endpoints específicos para ADMIN
                 .requestMatchers("/api/categories/**").hasRole(SecurityConstants.ROLE_ADMIN)
                 .requestMatchers("/api/auth/register").hasRole(SecurityConstants.ROLE_ADMIN)
-                .requestMatchers("/api/users/**", "/api/authors/**", "/api/books/**", "/api/borrows/**").hasRole(SecurityConstants.ROLE_ADMIN)
+                .requestMatchers(HttpMethod.POST, "/api/users/**", "/api/authors/**", "/api/books/**").hasRole(SecurityConstants.ROLE_ADMIN)
+                .requestMatchers(HttpMethod.PUT, "/api/users/**", "/api/authors/**", "/api/books/**", "/api/borrows/**").hasRole(SecurityConstants.ROLE_ADMIN)
+                .requestMatchers(HttpMethod.DELETE, "/api/users/**", "/api/authors/**", "/api/books/**", "/api/borrows/**").hasRole(SecurityConstants.ROLE_ADMIN)
                 // Endpoints específicos para USER e ADMIN
                 .requestMatchers("/api/borrows/user/**").hasAnyRole(SecurityConstants.ROLE_USER, SecurityConstants.ROLE_ADMIN)
                 // Qualquer outra requisição deve ser autenticada

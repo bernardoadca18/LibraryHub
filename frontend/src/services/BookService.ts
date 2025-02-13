@@ -27,8 +27,7 @@ export interface RatingData {
 }
 
 // Buscar os livros com parâmetros de paginação
-
-export const fetchBooks = async (page: number = 0, size: number = 20) => {
+export const fetchBooks = async (page: number = 0, size: number = 20)  => {
     try
     {
         const token = getToken();
@@ -45,6 +44,7 @@ export const fetchBooks = async (page: number = 0, size: number = 20) => {
         throw error;
     }
 };
+
 
 // Buscar quantidade de livros
 // NÃO PRECISA DE AUTENTICAÇÃO | NO NEED FOR AUTHENTICATION

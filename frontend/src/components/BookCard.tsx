@@ -18,7 +18,7 @@ const BookCard = ({ imageUrl, title, author, year, category, availableCopies = 0
 
     return (
         <div className='bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border-2 border-slate-100'>
-            <img className='w-full h-48 object-cover rounded-t-lg' src={imageUrl} alt={`Capa do livro ${title}`} />
+            <img className='w-full h-48 object-cover rounded-t-lg' src={imageUrl || ""} alt={`Capa do livro ${title}`} />
             <div className='p-4'>
                 <h3 className='font-semibold text-slate-800 mb-2'>{title}</h3>
                 <p className='text-sm text-slate-600 mb-1'>{author}</p>

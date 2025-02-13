@@ -4,7 +4,7 @@ import { getToken, isTokenValid } from './Auth.ts';
 const API_BASE_URL = 'http://localhost:8080/api/authors';
 
 export interface AuthorDTO {
-    id: number;
+    authorId: number;
     name: string;
     birthDate: string;
 }

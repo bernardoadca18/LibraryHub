@@ -81,7 +81,7 @@ const Home = () : React.ReactNode => {
         {count: '24h', desc: "Available for you"}
     ]
     return (
-        <div className={`${colors.background} mt-16`}>
+        <div className={`${colors.background} mt-16 min-h-[calc(100vh-4rem)]`}>
             <PageTitle title={pageTitle} description={pageDescription} darkTheme={darkTheme}/>
             <div className={`max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 flex flex-row gap-8 justify-center ${colors.background}`}>
                 {statsContent.map((stats, index) => (

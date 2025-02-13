@@ -47,6 +47,7 @@ public class BookService {
     @Autowired
     private UserRepository userRepository;
 
+    /*
     @Transactional(readOnly = true)
     @Cacheable(key = "#root.method.name")
     public List<BookDTO> findAll() {
@@ -54,6 +55,23 @@ public class BookService {
         List<BookDTO> dto = result.stream().map(x -> new BookDTO(x)).toList();
 
         return dto;
+    }
+     */
+    @Transactional(readOnly = true)
+    @Cacheable(key = "#root.method.name")
+    public Page<BookDTO> findAll(Pageable pageable) {
+        Page<Book> result = bookRepository.findAll(pageable);
+        return result.map(BookDTO::new);
+    }
+
+    public Page<BookDTO> searchBooks(String title, Pageable pageable) {
+        Specification<Book> spec = Specification.where(null);
+
+        if (title != null) {
+            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
+        }
+
+        return bookRepository.findAll(spec, pageable).map(BookDTO::new);
     }
 
     @Transactional(readOnly = true)
@@ -81,6 +99,7 @@ public class BookService {
         return dto;
     }
 
+    /*
     @Transactional
     public List<BookDTO> searchByTitle(String searchTerm) {
         List<BookMinProjection> result = bookRepository.searchByTitle(searchTerm);
@@ -88,7 +107,7 @@ public class BookService {
 
         return dto;
     }
-
+     */
     @Transactional
     public List<BookDTO> findAvailableBooks() {
         return bookRepository.findAvailableBooks().stream().map((x) -> new BookDTO(x)).toList();

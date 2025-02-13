@@ -5,7 +5,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import useAuthStore from '../services/AuthStore.ts'
 import { getUsernameFromToken } from '../services/Auth.ts'
 const menus = ['HOME', 'CATEGORIES', 'BOOKS']
-const links = ['/']
+const links = ['/', '', '/catalogue']
 
 const Header = () : React.ReactNode => {
     const { isAuthenticated, logout, darkTheme, toggleTheme } = useAuthStore();
@@ -110,14 +110,14 @@ const Header = () : React.ReactNode => {
                             <Link className={`${colors.text} ${colors.hoverText}`} to={links[0]}>{menus[0]}</Link>
                             {isAuthenticated && (
                                 <>
-                                    <Link className={`${colors.text} ${colors.hoverText}`} to={''}>{menus[1]}</Link>
-                                    <Link className={`${colors.text} ${colors.hoverText}`} to={''}>{menus[2]}</Link>
+                                    <Link className={`${colors.text} ${colors.hoverText}`} to={links[1]}>{menus[1]}</Link>
+                                    <Link className={`${colors.text} ${colors.hoverText}`} to={links[2]}>{menus[2]}</Link>
                                 </>
                             )}
                         </div>
                     </div>
-                    <div className='flex items-center space-x-4'>
-                        <div className='relative'>
+                    <div className='flex items-center space-x-4 mr-8'>
+                        <div className='relative hidden lg:block'>
                             <input className={`w-64 ml-4 px-4 py-2 rounded-lg border ${colors.border} focus:outline-none focus:ring-2 ${colors.focusRing} ${colors.text} placeholder:${colors.text}`} type="search" placeholder='Search'/>
                             <i className='bi bi-search absolute right-3 top-2.5 text-slate-400'></i>
                         </div>
@@ -140,15 +140,19 @@ const Header = () : React.ReactNode => {
                             </>
                         )}
                         {
-                            darkTheme ? (
-                                <button onClick={changeTheme} className='w-2'>
-                                    <i className={`bi bi-brightness-high-fill cursor-pointer p-4 text-3xl ${colors.lightbulbIconColor}`}></i>
-                                </button>
-                            ) : (
-                                <button onClick={changeTheme} className='w-2'>
-                                    <i className={`bi bi-moon-fill cursor-pointer p-4 text-2xl ${colors.lightbulbIconColor}`}></i>
-                                </button>
-                            )
+                            <div>
+                                {
+                                    darkTheme ? (
+                                        <button onClick={changeTheme} className='w-2'>
+                                            <i className={`bi bi-brightness-high-fill cursor-pointer p-4 text-3xl ${colors.lightbulbIconColor}`}></i>
+                                        </button>
+                                    ) : (
+                                        <button onClick={changeTheme} className='w-2'>
+                                            <i className={`bi bi-moon-fill cursor-pointer p-4 text-2xl ${colors.lightbulbIconColor}`}></i>
+                                        </button>
+                                    )
+                                }
+                            </div>
                         }
                     </div>
                 </div>

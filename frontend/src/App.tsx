@@ -7,6 +7,7 @@ import Home from './pages/Home'
 import Login from './pages/Login.tsx'
 import Register from './pages/Register.tsx'
 import { removeToken } from './services/Auth.ts'
+import BookCatalogue from './pages/BookCatalogue.tsx'
 
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/catalogue" element={<BookCatalogue />} />
         </Route>
       </Routes>
     </BrowserRouter>
