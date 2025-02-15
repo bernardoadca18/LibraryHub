@@ -60,12 +60,13 @@ public class SecurityConfigurations {
                 .requestMatchers("/api/categories/**").hasRole(SecurityConstants.ROLE_ADMIN)
                 .requestMatchers("/api/auth/register").hasRole(SecurityConstants.ROLE_ADMIN)
                 .requestMatchers(HttpMethod.POST, "/api/users/**", "/api/authors/**", "/api/books/**").hasRole(SecurityConstants.ROLE_ADMIN)
-                .requestMatchers(HttpMethod.PUT, "/api/users/**", "/api/authors/**", "/api/books/**").hasRole(SecurityConstants.ROLE_ADMIN)
+                .requestMatchers(HttpMethod.PUT, "/api/authors/**", "/api/books/**").hasRole(SecurityConstants.ROLE_ADMIN)
                 .requestMatchers(HttpMethod.DELETE, "/api/users/**", "/api/authors/**", "/api/books/**", "/api/borrows/**").hasRole(SecurityConstants.ROLE_ADMIN)
                 // Endpoints específicos para USER e ADMIN
+                .requestMatchers(HttpMethod.PUT, "/api/users/**").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/api/borrows/return/id/{id}").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/borrows/check").authenticated()
-                .requestMatchers("/api/borrows/user/**").hasAnyRole(SecurityConstants.ROLE_USER, SecurityConstants.ROLE_ADMIN)
+                .requestMatchers("/api/borrows/user/{id}").authenticated()
                 // Endpoints Owner e Admin
                 .requestMatchers(HttpMethod.GET, "/api/users/id/{id}").access(new WebExpressionAuthorizationManager("@securityUtils.isOwnerOrAdmin(authentication,#id)"))
                 .requestMatchers(HttpMethod.PUT, "/api/users/id/{id}").access(new WebExpressionAuthorizationManager("@securityUtils.isOwnerOrAdmin(authentication,#id)"))

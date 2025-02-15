@@ -41,7 +41,7 @@ const BookCard = ({ imageUrl, title, author, year, category, availableCopies = 0
             {
                 isAuthenticated ? (
                     <Link to={`/book/${bookId}`}>
-                        <div className={`bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border-2 border-slate-100 ${colors.class}`}>
+                        <div className={`rounded-lg shadow-sm hover:shadow-md transition-shadow border-2 border-slate-100 ${colors.class}`}>
                             <img className='w-full h-48 object-cover rounded-t-lg' src={imageUrl || ""} alt={`Capa do livro ${title}`} />
                             <div className='p-4'>
                                 <h3 className={`font-semibold mb-2 ${colors.titleColor}`}>{title}</h3>
@@ -63,7 +63,7 @@ const BookCard = ({ imageUrl, title, author, year, category, availableCopies = 0
                         </div>
                     </Link>
                 ) : (
-                    <div className={`bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border-2 border-slate-100 ${colors.class}`}>
+                    <div className={`rounded-lg shadow-sm hover:shadow-md transition-shadow border-2 border-slate-100 ${colors.class}`}>
                         <img className='w-full h-48 object-cover rounded-t-lg' src={imageUrl || ""} alt={`Capa do livro ${title}`} />
                         <div className='p-4'>
                             <h3 className={`font-semibold mb-2 ${colors.titleColor}`}>{title}</h3>

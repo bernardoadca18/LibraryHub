@@ -49,9 +49,9 @@ const Home = () : React.ReactNode => {
         iconColor: '#FFFFFF'
     };
     // BUTTONS
-    const bookIcon = <svg xmlns="http://www.w3.org/2000/svg" width="6rem" height="6rem" fill={colors.iconColor} className="bi bi-book-fill" viewBox="0 0 16 16"><path d="M8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/></svg>;
-    const categoryIcon = <svg xmlns="http://www.w3.org/2000/svg" width="6rem" height="6rem" fill="currentColor" className="bi bi-card-list" viewBox="0 0 16 16"><path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/><path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/></svg>
-    
+    const bookIcon : React.ReactNode = <svg xmlns="http://www.w3.org/2000/svg" width="6rem" height="6rem" fill={colors.iconColor} className="bi bi-book-fill" viewBox="0 0 16 16"><path d="M8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/></svg>;
+    const profileIcon : React.ReactNode = <svg xmlns="http://www.w3.org/2000/svg" width="6rem" height="6rem" fill="currentColor" className="bi bi-person-fill" viewBox="0 0 16 16"><path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/></svg>;
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -92,7 +92,7 @@ const Home = () : React.ReactNode => {
 
     const navButtonsContent = [
         {text: "Book Catalogue", to: "/catalogue", icon: bookIcon},
-        {text: "Categories", to: "/categories", icon: categoryIcon}
+        {text: "Profile", to: "/profile", icon: profileIcon}
     ]
     
     return (
@@ -111,7 +111,7 @@ const Home = () : React.ReactNode => {
 
             <div className='p-4'>
                 <div className={`${colors.class} max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8`}>
-                    <h2 className={`text-2xl font-bold mb-6 ${colors.sectionText}`}>Top Rated Books</h2>
+                    <h2 className={`text-2xl font-bold mb-6 ${colors.sectionText}`}>Most Borrowed Books</h2>
                     <div className='flex overflow-x-auto gap-6 pb-4'>
                         {Array.isArray(topRatedBooks) && topRatedBooks.map((book : BookData, index : number) => (
                             <div key={index} className='flex-shrink-0 w-48'>
@@ -135,6 +135,7 @@ const Home = () : React.ReactNode => {
                     <>
                         <div className='p-4'>
                             <div className={`${colors.class} max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8`}>
+                                <h2 className={`text-2xl font-bold mb-6 ${colors.sectionText}`}>Menus</h2>
                                 <div className='flex overflow-x-auto gap-6 pb-4'>
                                     {
                                         navButtonsContent.map((content, index) => (

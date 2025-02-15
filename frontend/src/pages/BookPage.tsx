@@ -146,11 +146,11 @@ const BookPage = () => {
                     <div className='w-full flex items-center justify-center gap-8'>
                         {
                             hasActiveBorrow ? (
-                                <button onClick={handleReturn} className={`w-1/3 mt-4 px-6 py-2 rounded-lg transition-colors ${colors.class} ${""} hover:cursor-pointer`}>
+                                <button onClick={handleReturn} className={`w-3/4 mt-4 px-6 py-2 rounded-lg transition-colors ${colors.class} ${""} hover:cursor-pointer`}>
                                     Return Book
                                 </button>
                             ) : book.availableCopies > 0 ? (
-                                <button onClick={handleBorrow} className={`w-1/3 mt-4 px-6 py-2 rounded-lg transition-colors ${colors.class} ${""} hover:cursor-pointer`}>
+                                <button onClick={handleBorrow} className={`w-3/4 mt-4 px-6 py-2 rounded-lg transition-colors ${colors.class} ${""} hover:cursor-pointer`}>
                                 Borrow Book ({book.availableCopies} available)
                                 </button>
                             ) : null

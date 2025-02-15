@@ -6,10 +6,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bookstore_manager.backend.dto.UserDTO;
+import com.bookstore_manager.backend.dto.UserUpdateDTO;
 import com.bookstore_manager.backend.entities.User;
 import com.bookstore_manager.backend.exception.DatabaseException;
 import com.bookstore_manager.backend.exception.ResourceNotFoundException;
@@ -77,10 +79,10 @@ public class UserService {
 
     // UPDATE
     @Transactional
-    public UserDTO update(Long id, UserDTO dto) {
+    public UserDTO update(Long id, UserUpdateDTO dto) {
         try {
             User entity = userRepository.getReferenceById(id);
-            copyDtoToEntity(dto, entity);
+            copyUpdateDtoToEntity(dto, entity);
             entity = userRepository.save(entity);
             return new UserDTO(entity);
         } catch (EntityNotFoundException e) {
@@ -107,6 +109,15 @@ public class UserService {
         entity.setPhone(dto.getPhone());
         entity.setUsername(dto.getUsername());
         entity.setPassword(dto.getHashPassword());
+        entity.setRole(dto.getRole());
+    }
+
+    private void copyUpdateDtoToEntity(UserUpdateDTO dto, User entity) {
+        entity.setName(dto.getName());
+        entity.setEmail(dto.getEmail());
+        entity.setPhone(dto.getPhone());
+        entity.setUsername(dto.getUsername());
+        entity.setPassword(new BCryptPasswordEncoder().encode(dto.getPassword()));
         entity.setRole(dto.getRole());
     }
 

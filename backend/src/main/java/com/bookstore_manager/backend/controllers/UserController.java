@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bookstore_manager.backend.dto.BorrowDTO;
 import com.bookstore_manager.backend.dto.UserDTO;
+import com.bookstore_manager.backend.dto.UserUpdateDTO;
 import com.bookstore_manager.backend.services.BorrowService;
 import com.bookstore_manager.backend.services.UserService;
 
@@ -77,7 +78,7 @@ public class UserController {
 
     // UPDATE
     @PutMapping(value = "/id/{id}")
-    public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserUpdateDTO userDTO) {
         UserDTO result = userService.update(id, userDTO);
         return ResponseEntity.ok(result);
     }

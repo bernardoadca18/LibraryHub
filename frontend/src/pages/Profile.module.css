@@ -1,0 +1,48 @@
+.darkTheme {
+    background-color: #090909;
+}
+
+.lightTheme {
+
+}
+
+.bgDark {
+    background-color: #040404;
+    color: white;
+}
+
+
+.buttonDark {
+    background-color: hsl(0, 0%, 90%);
+    color: black;
+}
+
+.buttonDark:hover {
+    background-color: hsl(0, 0%, 100%);
+}
+
+.buttonDark:active {
+    background-color: hsl(0, 0%, 80%);
+}
+
+.buttonLight {
+    background-color: hsl(0, 0%, 10%);
+    color: white;
+}
+
+.buttonLight:hover {
+    background-color: hsl(0, 0%, 20%);
+}
+
+.buttonLight:active {
+    background-color: hsl(0, 0%, 0%);
+}
+
+.lightTheme2
+{
+    
+}
+.darkTheme2
+    {
+        background-color: #101010;
+    }

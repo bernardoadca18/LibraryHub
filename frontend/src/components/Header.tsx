@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import 'bootstrap/dist/js/bootstrap.bundle.min'
 import "bootstrap-icons/font/bootstrap-icons.css"
 import useAuthStore from '../services/AuthStore.ts'
 import { getUsernameFromToken } from '../services/Auth.ts'
-const menus = ['HOME', 'CATEGORIES', 'BOOKS']
-const links = ['/', '', '/catalogue']
+const menus = ['HOME', 'BOOKS']
+const links = ['/', '/catalogue']
 
 const Header = () : React.ReactNode => {
     const { isAuthenticated, logout, darkTheme, toggleTheme } = useAuthStore();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-
+    const navigate = useNavigate();
     // Estado para as cores
     const [colors, setColors] = useState({
         background: 'bg-white',
@@ -24,7 +24,8 @@ const Header = () : React.ReactNode => {
         dropdownHover: 'hover:bg-slate-100',
         dropdownBorder: 'border-slate-200',
         lightbulbIconColor: 'text-black',
-        otherFontColor: 'text-black'
+        otherFontColor: 'text-black',
+        iconText: 'text-black'
     });
 
     const setDarkThemeElements = () => {
@@ -39,7 +40,8 @@ const Header = () : React.ReactNode => {
             dropdownHover: 'hover:bg-gray-700',
             dropdownBorder: 'border-gray-700',
             lightbulbIconColor: 'text-white',
-            otherFontColor: 'text-gray-300'
+            otherFontColor: 'text-gray-300',
+            iconText: 'text-white'
         });
 
     };
@@ -56,7 +58,8 @@ const Header = () : React.ReactNode => {
             dropdownHover: 'hover:bg-slate-100',
             dropdownBorder: 'border-slate-200',
             lightbulbIconColor: 'text-black',
-            otherFontColor: 'text-black'
+            otherFontColor: 'text-black',
+            iconText: 'text-black'
         });
     }
 
@@ -96,6 +99,7 @@ const Header = () : React.ReactNode => {
     const handleLogout = () => {
         logout();
         setIsDropdownOpen(false);
+        navigate('/login');
     }
 
     return (
@@ -103,8 +107,8 @@ const Header = () : React.ReactNode => {
             <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
                 <div className='flex justify-between h-16'>
                     <div className='flex items-center'>
-                        <Link className={`${colors.text} text-xl font-semibold flex items-center gap-2 whitespace-nowrap`} to={links[0]}>
-                            LibraryHub<i className="bi bi-book flex-shrink-0 ${colors.text}"></i>
+                        <Link className={`${colors.iconText} text-xl font-semibold flex items-center gap-2 whitespace-nowrap`} to={links[0]}>
+                            LibraryHub<i className={`bi bi-book flex-shrink-0 ${colors.iconText}`}></i>
                         </Link>
                         <div className='hidden md:flex items-center space-x-8 ml-10'>
                             <Link className={`${colors.text} ${colors.hoverText}`} to={links[0]}>{menus[0]}</Link>
@@ -117,10 +121,6 @@ const Header = () : React.ReactNode => {
                         </div>
                     </div>
                     <div className='flex items-center space-x-4 mr-8'>
-                        <div className='relative hidden lg:block'>
-                            <input className={`w-64 ml-4 px-4 py-2 rounded-lg border ${colors.border} focus:outline-none focus:ring-2 ${colors.focusRing} ${colors.text} placeholder:${colors.text}`} type="search" placeholder='Search'/>
-                            <i className='bi bi-search absolute right-3 top-2.5 text-slate-400'></i>
-                        </div>
                         {isAuthenticated ? (
                             <div className="dropdown" ref={dropdownRef} style={{position: 'relative'}}>
                                 <button className={`${colors.text} btn btn-link dropdown-toggle cursor-pointer p-2`} type="button" onClick={toggleDropdown}>
@@ -128,7 +128,7 @@ const Header = () : React.ReactNode => {
                                 </button>
                                 {isDropdownOpen && (
                                     <div className={`dropdown-menu show ${colors.dropdownBackground} p-2`} style={{zIndex:1001, display: 'flex', flexDirection: 'column', position: 'absolute', left: 0, justifyContent: 'flex-start'}}>
-                                        <button className={`dropdown-item cursor-pointer p-2 ${colors.dropdownBorder} ${colors.dropdownHover} ${colors.text}`}>Configurações</button>
+                                        <Link to={'/profile'}><button className={`dropdown-item cursor-pointer p-2 ${colors.dropdownBorder} ${colors.dropdownHover} ${colors.text}`}>My Account</button></Link>
                                         <button className={`dropdown-item cursor-pointer p-2 ${colors.dropdownBorder} ${colors.dropdownHover} ${colors.text}`} onClick={handleLogout}>Logout</button>
                                     </div>
                                 )}

@@ -43,7 +43,6 @@ const BookCatalogue = () : React.ReactNode => {
   const [selectedAuthor, setSelectedAuthor] = useState<number | null>(null);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [showAvailableOnly, setShowAvailableOnly] = useState(false);
-  const [minRating, setMinRating] = useState<number>(0);
   
   // filter options
   const [categories, setCategories] = useState<CategoryData[]>([]);
@@ -145,9 +144,8 @@ const BookCatalogue = () : React.ReactNode => {
                   const matchesAuthor = !selectedAuthor || book.authorId === selectedAuthor;
                   const matchesYear = !selectedYear || book.publishYear === selectedYear;
                   const matchesAvailability = !showAvailableOnly || book.availableCopies > 0;
-                  const matchesRating = book.averageRating >= minRating;
                   
-                  return matchesCategory && matchesAuthor && matchesYear && matchesAvailability && matchesRating;
+                  return matchesCategory && matchesAuthor && matchesYear && matchesAvailability;
               });
   
               setTotalPages(Math.ceil(filteredBooks.length / pageSize));
@@ -166,7 +164,7 @@ const BookCatalogue = () : React.ReactNode => {
       return () => clearTimeout(timeoutId);
   
   }, [searchQuery, selectedCategory, selectedAuthor, selectedYear, 
-      showAvailableOnly, minRating, currentPage, pageSize, bookCount]);
+      showAvailableOnly, currentPage, pageSize, bookCount]);
 
   if (loading)
   {
@@ -212,14 +210,6 @@ const BookCatalogue = () : React.ReactNode => {
                 <input type="checkbox" checked={showAvailableOnly} onChange={(e) => setShowAvailableOnly(e.target.checked)} className="mr-2"/>
                 Available Only
             </label>
-    
-            {/* Rating Filter */}
-            <select value={minRating} onChange={(e) => setMinRating(Number(e.target.value))} className={`p-2 border rounded ${colors.class}`} >
-                <option value={0}>All Ratings</option>
-                <option value={3}>3+ Stars</option>
-                <option value={4}>4+ Stars</option>
-                <option value={5}>5 Stars</option>
-            </select>
           </div>
           {/* Pagination */}
           {<Pagination></Pagination>}
