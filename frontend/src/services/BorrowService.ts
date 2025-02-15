@@ -4,6 +4,7 @@ import { getToken, isTokenValid } from './Auth.ts';
 const API_BASE_URL = 'http://localhost:8080/api/borrows';
 
 export interface BorrowDTO {
+    borrowId?: number;
     userId: number;
     bookId: number;
     borrowDate: string;
@@ -161,6 +162,48 @@ export const extendBorrowPeriod = async (borrowId: number, additionalDays: numbe
         return response.data;
     } catch (error) {
         console.error('Erro ao extender período de empréstimo:', error);
+        throw error;
+    }
+};
+
+
+export const checkActiveBorrow = async (userId: number, bookId: number) => {
+    try {
+        const token = getToken();
+        const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`} : {};
+        const response = await axios.get(`${API_BASE_URL}/check`, {
+            params: { userId, bookId },
+            headers: headers
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao verificar empréstimo:', error);
+        throw error;
+    }
+};
+
+export const returnBorrow = async (borrowId: number) => {
+    try {
+        const token = getToken();
+        const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`} : {};
+        const response = await axios.put(`${API_BASE_URL}/return/id/${borrowId}`, null, { headers });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao devolver livro:', error);
+        throw error;
+    }
+};
+
+export const fetchActiveUserBorrows = async (userId: number)  => {
+    try {
+        const token = getToken();
+        const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`} : {};
+        const response = await axios.get(`${API_BASE_URL}/user/${userId}`, {
+            headers: headers
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao buscar empréstimos ativos:', error);
         throw error;
     }
 };

@@ -1,7 +1,6 @@
 package com.bookstore_manager.backend.dataloader;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -14,13 +13,11 @@ import com.bookstore_manager.backend.entities.Author;
 import com.bookstore_manager.backend.entities.Book;
 import com.bookstore_manager.backend.entities.Borrow;
 import com.bookstore_manager.backend.entities.Category;
-import com.bookstore_manager.backend.entities.Rating;
 import com.bookstore_manager.backend.entities.User;
 import com.bookstore_manager.backend.repositories.AuthorRepository;
 import com.bookstore_manager.backend.repositories.BookRepository;
 import com.bookstore_manager.backend.repositories.BorrowRepository;
 import com.bookstore_manager.backend.repositories.CategoryRepository;
-import com.bookstore_manager.backend.repositories.RatingRepository;
 import com.bookstore_manager.backend.repositories.UserRepository;
 
 @Component
@@ -31,7 +28,6 @@ public class DataLoader {
             BookRepository bookRepository,
             AuthorRepository authorRepository,
             CategoryRepository categoryRepository,
-            RatingRepository ratingRepository,
             BorrowRepository borrowRepository) {
 
         return args -> {
@@ -146,23 +142,6 @@ public class DataLoader {
             borrowRepository.saveAll(borrows);
 
             // Criação de avaliações
-            List<Rating> ratings = new ArrayList<>();
-            for (int i = 0; i < 1000; i++) { // 1000 avaliações
-                User user = users.get(random.nextInt(users.size() - 1)); // Exclui admin
-                Book book = books.get(random.nextInt(books.size()));
-
-                Rating rating = new Rating(
-                        user,
-                        book,
-                        random.nextInt(4) + 2 // Notas entre 2-5
-                );
-
-                // Ajuste manual do createdAt para coincidir com datas realistas
-                rating.setCreatedAt(LocalDateTime.now().minusDays(random.nextInt(180)));
-
-                ratings.add(rating);
-            }
-            ratingRepository.saveAll(ratings);
         };
     }
 }

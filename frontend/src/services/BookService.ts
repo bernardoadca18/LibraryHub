@@ -189,25 +189,10 @@ export const fetchBookStatistics = async () => {
     }
 };
 
-// Adicionar avaliação a um livro
-export const addBookRating = async (bookId: number, ratingData: RatingData) => {
-    try {
-        const token = getToken();
-        const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.post(`${API_BASE_URL}/id/${bookId}/ratings`, ratingData, {
-            headers: headers
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Erro ao adicionar avaliação:', error);
-        throw error;
-    }
-};
-
 // Não precisa de autenticação
 export async function fetchTopRatedBooks(page: number, size: number) {
     try {
-        const response = await axios.get('http://localhost:8080/api/books/top-rated', {
+        const response = await axios.get('http://localhost:8080/api/books/top-borrowed', {
             params: {
                 page: page,
                 size: size

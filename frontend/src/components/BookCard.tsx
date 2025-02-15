@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './BookCard.module.css'
 import { Link } from 'react-router-dom';
+import useAuthStore from '../services/AuthStore.ts';
 
 interface BookCardProps {
     bookId: number,
@@ -19,6 +20,8 @@ const BookCard = ({ imageUrl, title, author, year, category, availableCopies = 0
 
     const isOnFrontPage = location.pathname === '/';
 
+    const {isAuthenticated} = useAuthStore();
+
     const colors = darkTheme
     ? {
         titleColor: 'text-slate-800',
@@ -34,28 +37,55 @@ const BookCard = ({ imageUrl, title, author, year, category, availableCopies = 0
     };
 
     return (
-        <Link to={`/book/${bookId}`}>
-            <div className={`bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border-2 border-slate-100 ${colors.class}`}>
-                <img className='w-full h-48 object-cover rounded-t-lg' src={imageUrl || ""} alt={`Capa do livro ${title}`} />
-                <div className='p-4'>
-                    <h3 className={`font-semibold mb-2 ${colors.titleColor}`}>{title}</h3>
-                    <p className={`text-sm ${colors.authorText} mb-1`}>{author}</p>
-                    <div className={`flex justify-between text-sm ${colors.otherText} mb-2`}>
-                        <span>{year}</span>
-                        <span>{category}</span>
-                    </div>
-                    {
-                        (!isOnFrontPage) ? (
-                            <div className={`text-sm px-2 py-1 rounded-full ${availabilityColor}`}>
-                                {availabilityText}
+        <>
+            {
+                isAuthenticated ? (
+                    <Link to={`/book/${bookId}`}>
+                        <div className={`bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border-2 border-slate-100 ${colors.class}`}>
+                            <img className='w-full h-48 object-cover rounded-t-lg' src={imageUrl || ""} alt={`Capa do livro ${title}`} />
+                            <div className='p-4'>
+                                <h3 className={`font-semibold mb-2 ${colors.titleColor}`}>{title}</h3>
+                                <p className={`text-sm ${colors.authorText} mb-1`}>{author}</p>
+                                <div className={`flex justify-between text-sm ${colors.otherText} mb-2`}>
+                                    <span>{year}</span>
+                                    <span>{category}</span>
+                                </div>
+                                {
+                                    (!isOnFrontPage) ? (
+                                        <div className={`text-sm px-2 py-1 rounded-full ${availabilityColor}`}>
+                                            {availabilityText}
+                                        </div>
+                                    ) : (
+                                        <></>
+                                    )
+                                }
                             </div>
-                        ) : (
-                            <></>
-                        )
-                    }
-                </div>
-            </div>
-        </Link>
+                        </div>
+                    </Link>
+                ) : (
+                    <div className={`bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border-2 border-slate-100 ${colors.class}`}>
+                        <img className='w-full h-48 object-cover rounded-t-lg' src={imageUrl || ""} alt={`Capa do livro ${title}`} />
+                        <div className='p-4'>
+                            <h3 className={`font-semibold mb-2 ${colors.titleColor}`}>{title}</h3>
+                            <p className={`text-sm ${colors.authorText} mb-1`}>{author}</p>
+                            <div className={`flex justify-between text-sm ${colors.otherText} mb-2`}>
+                                <span>{year}</span>
+                                <span>{category}</span>
+                            </div>
+                            {
+                                (!isOnFrontPage) ? (
+                                    <div className={`text-sm px-2 py-1 rounded-full ${availabilityColor}`}>
+                                        {availabilityText}
+                                    </div>
+                                ) : (
+                                    <></>
+                                )
+                            }
+                        </div>
+                    </div>
+                )
+            }
+        </>
     );
 };
 

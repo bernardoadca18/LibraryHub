@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.bookstore_manager.backend.entities.Borrow;
 
@@ -40,4 +41,7 @@ public interface BorrowRepository extends JpaRepository<Borrow, Long> {
 
     @Query("SELECT COUNT(b) FROM Borrow b")
     Long getBorrowCount();
+
+    @Query("SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END FROM Borrow b WHERE b.user.userId = :userId AND b.book.bookId = :bookId AND b.returnDate IS NULL")
+    boolean existsActiveBorrowByUserAndBook(@Param("userId") Long userId, @Param("bookId") Long bookId);
 }

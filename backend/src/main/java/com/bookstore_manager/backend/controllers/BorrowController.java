@@ -88,6 +88,11 @@ public class BorrowController {
         return ResponseEntity.ok(result);
     }
 
+    @PutMapping("/return/id/{id}")
+    public ResponseEntity<BorrowDTO> returnBook(@PathVariable Long id) {
+        return ResponseEntity.ok(borrowService.returnBook(id));
+    }
+
     // DELETE
     @DeleteMapping(value = "/id/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
@@ -109,5 +114,10 @@ public class BorrowController {
     @PostMapping("/extend")
     public ResponseEntity<BorrowDTO> extendBorrowPeriod(@RequestParam Long borrowId, @RequestParam Integer additionalDays) {
         return ResponseEntity.ok(borrowService.extendBorrowPeriod(borrowId, additionalDays));
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<Boolean> checkBookBorrowStatus(@RequestParam Long userId, @RequestParam Long bookId) {
+        return ResponseEntity.ok(borrowService.isBookBorrowdByUser(userId, bookId));
     }
 }

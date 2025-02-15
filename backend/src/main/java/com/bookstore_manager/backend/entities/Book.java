@@ -1,7 +1,5 @@
 package com.bookstore_manager.backend.entities;
 
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -44,14 +41,8 @@ public class Book {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @OneToMany(mappedBy = "book")
-    private List<Rating> ratings;
-
-    @Column(name = "average_rating")
-    private Double averageRating = 0.0;
-
-    @Column(name = "rating_count")
-    private Integer ratingCount = 0;
+    @Column(name = "borrow_count")
+    private Integer borrowCount;
 
     public Book() {
     }
@@ -65,6 +56,7 @@ public class Book {
         this.coverUrl = coverUrl;
         this.author = author;
         this.category = category;
+        this.borrowCount = 0;
     }
 
     public Book(String title, String isbn, Integer publishYear, Integer availableCopies, String coverUrl, Author author, Category category) {
@@ -75,6 +67,7 @@ public class Book {
         this.coverUrl = coverUrl;
         this.author = author;
         this.category = category;
+        this.borrowCount = 0;
     }
 
     public Long getBookId() {
@@ -141,28 +134,13 @@ public class Book {
         this.category = category;
     }
 
-    public List<Rating> getRatings() {
-        return ratings;
+    // Getters e Setters
+    public Integer getBorrowCount() {
+        return borrowCount;
     }
 
-    public void setRatings(List<Rating> ratings) {
-        this.ratings = ratings;
-    }
-
-    public Double getAverageRating() {
-        return averageRating;
-    }
-
-    public void setAverageRating(Double averageRating) {
-        this.averageRating = averageRating;
-    }
-
-    public Integer getRatingCount() {
-        return ratingCount;
-    }
-
-    public void setRatingCount(Integer ratingCount) {
-        this.ratingCount = ratingCount;
+    public void setBorrowCount(Integer borrowCount) {
+        this.borrowCount = borrowCount;
     }
 
     @Override

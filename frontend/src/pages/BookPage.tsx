@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { BookData, fetchBookById } from '../services/BookService.ts';
-import { createBorrow } from '../services/BorrowService.ts';
+import {  BookData, fetchBookById } from '../services/BookService.ts';
+import { createBorrow, checkActiveBorrow, BorrowDTO, fetchActiveUserBorrows, returnBorrow } from '../services/BorrowService.ts';
 import { getUserIdFromToken } from '../services/Auth.ts';
 import useAuthStore from '../services/AuthStore.ts';
 import styles from './BookPage.module.css'
@@ -13,16 +13,26 @@ const BookPage = () => {
     const { darkTheme, isAuthenticated } = useAuthStore();
     const [error, setError] = useState('');
 
+    const [hasActiveBorrow, setHasActiveBorrow] = useState(false);
+    const [activeBorrowId, setActiveBorrowId] = useState<number | null>(null);
+
+
     const colors = darkTheme
     ? {
         background: 'bg-black',
         text: 'text-gray-100',
         class: styles.light,
+        bgClass1: styles.lightBg1,
+        bgClass2: styles.lightBg2,
+        regularText: 'text-slate-800'
     }
     : {
         background: 'bg-white',
         text: 'text-slate-800',
         class: styles.dark,
+        bgClass1: styles.darkBg1,
+        bgClass2: styles.darkBg2,
+        regularText: 'text-gray-100'
     };
 
 
@@ -69,41 +79,84 @@ const BookPage = () => {
         loadBook();
     }, [bookId]);
 
+    useEffect(() => {
+        const checkBorrowStatus = async () => {
+            if (isAuthenticated && book) {
+                try {
+                    const userId = await getUserIdFromToken();
+                    const isBorrowed = await checkActiveBorrow(userId, book.bookId);
+                    setHasActiveBorrow(isBorrowed);
+                    
+                    // Buscar ID do empréstimo ativo
+                    const activeBorrows = await fetchActiveUserBorrows(userId);
+                    let activeBorrow: BorrowDTO | undefined;
+                    activeBorrows.map((borrow : BorrowDTO) => {
+                        if ((borrow.bookId === book.bookId) && (!borrow.returnDate || borrow.returnDate == ''))
+                        {
+                            activeBorrow = borrow;
+                        }
+                    })
+                    if (activeBorrow && activeBorrow.borrowId) setActiveBorrowId(activeBorrow.borrowId);
+                } catch (error) {
+                    console.error('Error checking borrow status:', error);
+                }
+            }
+        };
+
+        checkBorrowStatus();
+    }, [book, isAuthenticated]);
+
+    const handleReturn = async () => {
+        if (!activeBorrowId || !book) return;
+    
+        try {
+            setError('');
+            await returnBorrow(activeBorrowId);
+            const updatedBook = await fetchBookById(book.bookId);
+            setBook(updatedBook);
+            setHasActiveBorrow(false);
+        } catch (err) {
+            setError('Erro ao devolver livro. Tente novamente.');
+            console.error('Return error:', err);
+        }
+    };
+
     if (loading) return <div>Loading...</div>;
     if (!book) return <div>Book not found</div>;
     
 
     return (
         <main className='flex flex-col'>
-            <div className={`mt-16 flex p-8 shadow-sm`}>
+            <div className={`mt-16 flex p-8 shadow-sm ${colors.bgClass1} ${colors.regularText}`}>
             <div>
                 <h1 className={`text-4xl font-semibold`}>{book.title}</h1>
                 <p className={`mt-2 text-xl`}>{book.publishYear}</p>
             </div>
             <div className='flex-grow'></div>
-            <div>
-                <p className='text-xl font-semibold'>Overall Rating</p>
-                <div className='flex gap-2'>
-                    <i className="bi bi-star-fill text-xl"></i>
-                    <p className='font-semibold text-xl'>{book.averageRating}/10</p>
-                </div>
-            </div>
+            
             </div>
             
-            <div className='p-8 w-full h-dvh'>
+            <div className={`p-8 w-full h-dvh ${colors.bgClass2} ${colors.regularText}`}>
                 <img className='w-full h-48 object-cover rounded-t-lg' src={book.coverUrl || ""} alt={`Capa do livro ${book.title}`} />
             </div>
 
-            <div className='flex flex-col p-8'>
+            <div className={`flex flex-col p-8 items-center ${colors.bgClass1} ${colors.regularText}`}>
             {
-                    isAuthenticated && book.availableCopies > 0 && (
-                        <button 
-                            onClick={handleBorrow}
-                            className={`mt-4 px-6 py-2 rounded-lg transition-colors ${colors.class} ${""} hover:cursor-pointer`}
-                        >
-                            Borrow Book ({book.availableCopies} available)
-                        </button>
-                    )
+                isAuthenticated && (
+                    <div className='w-full flex items-center justify-center gap-8'>
+                        {
+                            hasActiveBorrow ? (
+                                <button onClick={handleReturn} className={`w-1/3 mt-4 px-6 py-2 rounded-lg transition-colors ${colors.class} ${""} hover:cursor-pointer`}>
+                                    Return Book
+                                </button>
+                            ) : book.availableCopies > 0 ? (
+                                <button onClick={handleBorrow} className={`w-1/3 mt-4 px-6 py-2 rounded-lg transition-colors ${colors.class} ${""} hover:cursor-pointer`}>
+                                Borrow Book ({book.availableCopies} available)
+                                </button>
+                            ) : null
+                        }
+                    </div>
+                )
             }
             </div>
 

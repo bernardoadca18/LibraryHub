@@ -22,10 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bookstore_manager.backend.dto.BookDTO;
 import com.bookstore_manager.backend.dto.BorrowDTO;
-import com.bookstore_manager.backend.dto.RatingDTO;
 import com.bookstore_manager.backend.services.BookService;
 import com.bookstore_manager.backend.services.BorrowService;
-import com.bookstore_manager.backend.services.RatingService;
 
 @RestController
 @RequestMapping(value = "/api/books")
@@ -37,22 +35,12 @@ public class BookController {
     @Autowired
     private BorrowService borrowService;
 
-    @Autowired
-    private RatingService ratingService;
-
     @GetMapping(value = "/id/{id}")
     public BookDTO findById(@PathVariable Long id) {
         BookDTO result = bookService.findById(id);
         return result;
     }
 
-    /*
-    @GetMapping
-    public List<BookDTO> findAll() {
-        List<BookDTO> result = bookService.findAll();
-        return result;
-    }
-     */
     @GetMapping
     public ResponseEntity<Page<BookDTO>> findAll(
             @PageableDefault(page = 0, size = 10, sort = "title", direction = Direction.ASC) Pageable pageable) {
@@ -112,58 +100,15 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
-    //
-    /*
-    @GetMapping("/search")
-    public ResponseEntity<List<BookDTO>> searchBooks(@RequestParam(required = false) String title) {
-        List<BookDTO> result = bookService.searchBooks(title);
-        return ResponseEntity.ok(result);
-    }
-     */
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getBookStatistics() {
         return ResponseEntity.ok(bookService.getBookStatistics());
     }
 
-    @PostMapping("/id/{bookId}/ratings")
-    public ResponseEntity<BookDTO> addRating(@PathVariable Long bookId, @RequestBody RatingDTO ratingDTO) {
-        BookDTO result = bookService.addRating(bookId, ratingDTO);
-        return ResponseEntity.ok(result);
-    }
-
-    @GetMapping(value = "/id/{bookId}/ratings")
-    public ResponseEntity<Page<RatingDTO>> getBookRatings(
-            @PathVariable Long bookId,
-            @PageableDefault(size = 10, sort = "createdAt", direction = Direction.DESC) Pageable pageable) {
-
-        Page<RatingDTO> ratings = ratingService.findByBookId(bookId, pageable);
-        return ResponseEntity.ok(ratings);
-    }
-
-    @GetMapping(value = "/id/{bookId}/average-rating")
-    public ResponseEntity<Double> getAverageRating(@PathVariable Long bookId) {
-        Double average = ratingService.getAverageRatingForBook(bookId);
-        return ResponseEntity.ok(average != null ? average : 0.0);
-    }
-
-    @GetMapping(value = "/id/{bookId}/rating-count")
-    public ResponseEntity<Long> getRatingCount(@PathVariable Long bookId) {
-        Long count = ratingService.getRatingCountForBook(bookId);
-        return ResponseEntity.ok(count != null ? count : 0L);
-    }
-
-    @GetMapping(value = "/id/{bookId}/user/{userId}/has-rated")
-    public ResponseEntity<Boolean> checkUserRating(
-            @PathVariable Long bookId,
-            @PathVariable Long userId) {
-        boolean hasRated = ratingService.userAlreadyRated(bookId, userId);
-        return ResponseEntity.ok(hasRated);
-    }
-
-    @GetMapping("/top-rated")
-    public ResponseEntity<Page<BookDTO>> getTopRatedBooks(
-            @PageableDefault(page = 0, size = 10, sort = "averageRating", direction = Direction.DESC) Pageable pageable) {
-        Page<BookDTO> result = bookService.findTopRatedBooks(pageable);
+    @GetMapping("/top-borrowed")
+    public ResponseEntity<Page<BookDTO>> getMostBorrowedBooks(
+            @PageableDefault(page = 0, size = 10, sort = "borrowCount", direction = Direction.DESC) Pageable pageable) {
+        Page<BookDTO> result = bookService.findMostBorrowedBooks(pageable);
         return ResponseEntity.ok(result);
     }
 

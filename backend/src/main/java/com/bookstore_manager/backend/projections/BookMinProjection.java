@@ -22,8 +22,4 @@ public interface BookMinProjection {
 
     String getCategoryName();
 
-    Double getAverageRating();
-
-    Integer getRatingCount();
-
 }

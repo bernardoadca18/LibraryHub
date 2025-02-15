@@ -84,12 +84,12 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
     @Query("SELECT COUNT(b) FROM Book b")
     Long getBookCount();
 
-    @Query("SELECT b FROM Book b ORDER BY b.averageRating DESC")
-    Page<Book> findAllByOrderByAverageRatingDesc(Pageable pageable);
-
     @Override
     Page<Book> findAll(Pageable pageable);
 
     @Override
     Page<Book> findAll(Specification<Book> spec, Pageable pageable);
+
+    @Query("SELECT b FROM Book b ORDER BY b.borrowCount DESC")
+    Page<Book> findMostBorrowedBooks(Pageable pageable);
 }

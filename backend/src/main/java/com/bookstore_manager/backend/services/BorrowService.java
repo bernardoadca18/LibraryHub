@@ -1,5 +1,6 @@
 package com.bookstore_manager.backend.services;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,9 +9,11 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bookstore_manager.backend.dto.BorrowDTO;
+import com.bookstore_manager.backend.entities.Book;
 import com.bookstore_manager.backend.entities.Borrow;
 import com.bookstore_manager.backend.exception.BusinessException;
 import com.bookstore_manager.backend.exception.DatabaseException;
@@ -89,9 +92,21 @@ public class BorrowService {
     // CREATE
     @Transactional
     public BorrowDTO create(BorrowDTO dto) {
+        Book book = bookRepository.findById(dto.getBookId()).orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+
+        if (book.getAvailableCopies() < 1) {
+            throw new BusinessException("No available copies");
+        }
+
         Borrow entity = new Borrow();
         copyDtoToEntity(dto, entity);
+
+        book.setAvailableCopies(book.getAvailableCopies() - 1);
+        book.setBorrowCount(book.getBorrowCount() + 1);
+        bookRepository.save(book);
+
         entity = borrowRepository.save(entity);
+
         return new BorrowDTO(entity);
     }
 
@@ -106,6 +121,27 @@ public class BorrowService {
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Borrow not found");
         }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public BorrowDTO returnBook(Long borrowId) {
+        Borrow borrow = borrowRepository.findById(borrowId).orElseThrow(() -> new ResourceNotFoundException("Borrow not found"));
+
+        if (borrow.getReturnDate() != null) {
+            throw new BusinessException("This borrow was returned");
+        }
+
+        borrow.setReturnDate(LocalDate.now());
+        Book book = borrow.getBook();
+        if (book == null) {
+            throw new BusinessException("Livro associado ao empréstimo não encontrado");
+        }
+        book.setAvailableCopies(book.getAvailableCopies() + 1);
+
+        bookRepository.saveAndFlush(book);
+        borrow = borrowRepository.saveAndFlush(borrow);
+
+        return new BorrowDTO(borrowRepository.save(borrow));
     }
 
     // DELETE
@@ -152,5 +188,12 @@ public class BorrowService {
         }
         borrow.setDueDate(borrow.getDueDate().plusDays(additionalDays));
         return new BorrowDTO(borrowRepository.save(borrow));
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isBookBorrowdByUser(Long userId, long bookId) {
+        userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        bookRepository.findById(bookId).orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+        return borrowRepository.existsActiveBorrowByUserAndBook(userId, bookId);
     }
 }
