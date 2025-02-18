@@ -1,0 +1,56 @@
+.buttonDark {
+    background-color: hsl(0, 0%, 90%);
+    color: black;
+}
+
+.buttonDark:hover {
+    background-color: hsl(0, 0%, 100%);
+}
+
+.buttonLight {
+    background-color: #222222;
+    color: white;
+}
+
+.buttonLight:hover {
+    background-color: #444444;
+}
+
+
+.buttonActive
+{
+    background-color: hsl(0, 0%, 80%);
+}
+
+.buttonActiveLight
+{
+    background-color: #000000;
+}
+
+
+.darkBackground1 {
+    background-color: #020202;
+    color: white;
+}
+
+.darkBackground2 {
+    background-color: #080808;
+    color: white;
+}
+
+.darkBackground3 {
+    background-color: #000000;
+    color: white;
+}
+
+.lightBackground1 {
+    
+}
+
+.lightBackground2 {
+    
+}
+
+.lightBackground3 {
+    
+}

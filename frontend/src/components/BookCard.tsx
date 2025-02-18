@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './BookCard.module.css'
 import { Link } from 'react-router-dom';
 import useAuthStore from '../services/AuthStore.ts';

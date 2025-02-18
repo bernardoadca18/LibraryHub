@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,5 +95,18 @@ public class CategoryService {
         }
 
         return categoryRepository.findAll(spec).stream().map(CategoryDTO::new).collect(Collectors.toList());
+    }
+
+    // Adicionar este método no CategoryService
+    @Transactional(readOnly = true)
+    public Page<CategoryDTO> searchCategories(String name, Pageable pageable) {
+        Specification<Category> spec = Specification.where(null);
+
+        if (name != null) {
+            spec = spec.and((root, query, cb)
+                    -> cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
+        }
+
+        return categoryRepository.findAll(spec, pageable).map(CategoryDTO::new);
     }
 }

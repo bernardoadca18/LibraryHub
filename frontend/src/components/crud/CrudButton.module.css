@@ -1,0 +1,27 @@
+.buttonAuthLight {
+    background-color: #111111;
+    color: white;
+}
+
+.buttonAuthLight:hover {
+    background-color: #222222;
+    cursor: pointer;
+}
+
+.buttonAuthLight:active {
+    background-color: #000000;
+}
+
+.buttonAuthDark {
+    background-color: #EEEEEE;
+    color: black;
+}
+
+.buttonAuthDark:hover {
+    background-color: #FFFFFF;
+    cursor: pointer;
+}
+
+.buttonAuthDark:active {
+    background-color: #DDDDDD;
+}

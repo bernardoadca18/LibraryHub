@@ -6,7 +6,7 @@ import { login } from '../services/AuthService.ts'
 import useAuthStore from '../services/AuthStore.ts'
 import styles from './Login.module.css'
 
-const Login = () => {
+const Login = () : React.ReactNode => {
   const [username, setUsername] = React.useState('')
 	const [password, setPassword] = React.useState('')
 

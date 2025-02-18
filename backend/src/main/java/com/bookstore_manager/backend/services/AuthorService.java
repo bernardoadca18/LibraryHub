@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +44,18 @@ public class AuthorService {
     @Transactional(readOnly = true)
     public Long getAuthorCount() {
         return authorRepository.getAuthorCount();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<AuthorDTO> searchAuthors(String name, Pageable pageable) {
+        Specification<Author> spec = Specification.where(null);
+
+        if (name != null) {
+            spec = spec.and((root, query, cb)
+                    -> cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
+        }
+
+        return authorRepository.findAll(spec, pageable).map(AuthorDTO::new);
     }
 
     // CREATE   

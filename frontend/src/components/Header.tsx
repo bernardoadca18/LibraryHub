@@ -4,6 +4,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min'
 import "bootstrap-icons/font/bootstrap-icons.css"
 import useAuthStore from '../services/AuthStore.ts'
 import { getUsernameFromToken } from '../services/Auth.ts'
+import useIsAdmin from '../hooks/userIsAdmin.ts'
 const menus = ['HOME', 'BOOKS']
 const links = ['/', '/catalogue']
 
@@ -12,6 +13,9 @@ const Header = () : React.ReactNode => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+
+    const isAdmin = useIsAdmin();
+
     // Estado para as cores
     const [colors, setColors] = useState({
         background: 'bg-white',
@@ -102,6 +106,10 @@ const Header = () : React.ReactNode => {
         navigate('/login');
     }
 
+    useEffect(() => {
+        // Empty effect apenas para disparar re-render
+    }, [isAuthenticated]);
+
     return (
         <header className={`${colors.background} ${colors.shadow} fixed w-full top-0 border-b ${colors.border} z-[1000]`}>
             <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
@@ -116,6 +124,11 @@ const Header = () : React.ReactNode => {
                                 <>
                                     <Link className={`${colors.text} ${colors.hoverText}`} to={links[1]}>{menus[1]}</Link>
                                     <Link className={`${colors.text} ${colors.hoverText}`} to={links[2]}>{menus[2]}</Link>
+                                    {
+                                        isAdmin ? (
+                                            <Link className={`${colors.text} ${colors.hoverText}`} to={"/admin/dashboard"}>DASHBOARD</Link>
+                                        ) : (<></>)
+                                    }
                                 </>
                             )}
                         </div>

@@ -112,3 +112,19 @@ export const deleteAuthor = async (id: number) => {
         throw error;
     }
 };
+
+// Buscar autores por título
+export const searchAuthors = async (name: string, page: number = 0, size: number = 20) => {
+    try {
+        const token = getToken();
+        const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
+        const response = await axios.get(`${API_BASE_URL}/search`, {
+            params: { name, page, size },
+            headers: headers
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao buscar autores por nome:', error);
+        throw error;
+    }
+};

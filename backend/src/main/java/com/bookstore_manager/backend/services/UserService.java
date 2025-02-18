@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -130,6 +132,18 @@ public class UserService {
         }
 
         return userRepository.findAll(spec).stream().map(UserDTO::new).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserDTO> searchUsers(String name, Pageable pageable) {
+        Specification<User> spec = Specification.where(null);
+
+        if (name != null) {
+            spec = spec.and((root, query, cb)
+                    -> cb.like(cb.lower(root.get("username")), "%" + name.toLowerCase() + "%"));
+        }
+
+        return userRepository.findAll(spec, pageable).map(UserDTO::new);
     }
 
 }

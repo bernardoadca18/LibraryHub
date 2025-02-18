@@ -67,7 +67,8 @@ const BookPage = () => {
 
     useEffect(() => {
         const loadBook = async () => {
-            try {
+            try 
+            {
                 const bookData = await fetchBookById(Number(bookId));
                 setBook(bookData);
             } catch (error) {
