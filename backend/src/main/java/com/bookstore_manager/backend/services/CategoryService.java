@@ -109,4 +109,9 @@ public class CategoryService {
 
         return categoryRepository.findAll(spec, pageable).map(CategoryDTO::new);
     }
+
+    @Transactional(readOnly = true)
+    public Page<CategoryDTO> findAllPag(Pageable pageable) {
+        return categoryRepository.findAll(pageable).map(CategoryDTO::new);
+    }
 }

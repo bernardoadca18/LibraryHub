@@ -4,7 +4,7 @@ import { getToken, isTokenValid } from './Auth.ts';
 const API_BASE_URL = 'http://localhost:8080/api/books';
 
 export interface BookData {
-    bookId: number;
+    bookId?: number;
     title: string;
     isbn: string;
     publishYear: number;
@@ -12,18 +12,9 @@ export interface BookData {
     coverUrl: string;
     authorId: number;
     categoryId: number;
-    authorName: string;
-    categoryName: string;
-    averageRating: number;
-    ratingCount: number;
-}
-
-export interface RatingData {
-    id: number;
-    userId: number;
-    bookId: number;
-    rating: number;
-    createdAt: string;
+    authorName?: string;
+    categoryName?: string;
+    borrowCount: number;
 }
 
 // Buscar os livros com parâmetros de paginação
@@ -159,12 +150,12 @@ export const deleteBook = async (id: number) => {
 };
 
 // Buscar livros por título
-export const searchBooks = async (title: string) => {
+export const searchBooks = async (title: string, page: number = 0, size: number = 20) => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
         const response = await axios.get(`${API_BASE_URL}/search`, {
-            params: { title },
+            params: { title, page, size },
             headers: headers
         });
         return response.data;

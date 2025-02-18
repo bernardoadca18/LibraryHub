@@ -4,7 +4,7 @@ import { getToken, isTokenValid } from './Auth.ts';
 const API_BASE_URL = 'http://localhost:8080/api/categories';
 
 export interface CategoryData {
-    categoryId: number;
+    categoryId?: number;
     name: string;
 }
 
@@ -24,12 +24,13 @@ export const fetchCategoryById = async (id: number) => {
 };
 
 // Buscar todas as categorias
-export const fetchAllCategories = async () => {
+export const fetchAllCategories = async (page: number = 0, size: number = 20) => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(API_BASE_URL, {
-            headers: headers
+        const response = await axios.get(`${API_BASE_URL}/all`, {
+            headers: headers,
+            params: { page, size },
         });
         return response.data;
     } catch (error) {

@@ -146,4 +146,9 @@ public class UserService {
         return userRepository.findAll(spec, pageable).map(UserDTO::new);
     }
 
+    @Transactional(readOnly = true)
+    public Page<UserDTO> findAllPag(Pageable pageable) {
+        return userRepository.findAll(pageable).map(UserDTO::new);
+    }
+
 }

@@ -102,4 +102,11 @@ public class UserController {
         Page<UserDTO> result = userService.searchUsers(name, pageable);
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<Page<UserDTO>> findAllPag(
+            @PageableDefault(page = 0, size = 10, sort = "name", direction = Direction.ASC) Pageable pageable) {
+        Page<UserDTO> result = userService.findAllPag(pageable);
+        return ResponseEntity.ok(result);
+    }
 }

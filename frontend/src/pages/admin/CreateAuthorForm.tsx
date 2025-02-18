@@ -1,13 +1,12 @@
 import React from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styles from './EditAuthorForm.module.css'
 import useAuthStore from '../../services/AuthStore'
 import CrudInput from '../../components/crud/CrudInput'
 import CrudButton from '../../components/crud/CrudButton'
-import { updateAuthor } from '../../services/AuthorService'
+import { createAuthor } from '../../services/AuthorService'
 
-const EditAuthorForm = () : React.ReactNode => {
-	const {authorId} = useParams < { authorId: string } > ();
+const CreateAuthorForm = () : React.ReactNode => {
 
 	const {darkTheme} = useAuthStore();
 
@@ -25,7 +24,7 @@ const EditAuthorForm = () : React.ReactNode => {
 	};
 
 	const handleSave = async () => {
-		await updateAuthor(Number(authorId), {name: name, birthDate: birthDate});
+		await createAuthor({name: name, birthDate: birthDate})
 		navigate('/admin/dashboard/author')
 	}
 
@@ -40,7 +39,7 @@ const EditAuthorForm = () : React.ReactNode => {
 				<CrudButton text='Back' onClick={()=> navigate('/admin/dashboard/author')} darkTheme={darkTheme}></CrudButton>
 			</div>
 			<div className={`shadow-sm p-8 flex flex-col gap-8 ${colors.class}`}>
-				<h1 className={`text-4xl font-semibold`}>Edit Author (ID: {`${authorId}`})</h1>
+				<h1 className={`text-4xl font-semibold`}>Create New Author</h1>
 				<CrudInput text='Name' darkTheme={darkTheme} value={name} onChange={(e) => setName(e.target.value)} type='text'></CrudInput>
 				<CrudInput text='BirthDate' darkTheme={darkTheme} value={birthDate} onChange={(e) => setBirthDate(e.target.value)} type='date'></CrudInput>
 				<div className={`flex gap-8`}>
@@ -52,4 +51,4 @@ const EditAuthorForm = () : React.ReactNode => {
 	)
 }
 
-export default EditAuthorForm
+export default CreateAuthorForm

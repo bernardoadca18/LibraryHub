@@ -54,7 +54,8 @@ public class SecurityConfigurations {
                 .requestMatchers("/api/books/top-rated").permitAll()
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/api/token/validate").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/categories", "/api/authors", "/api/books", "/api/users", "/api/borrows").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/categories/all", "/api/authors/all", "/api/users/all", "/api/borrows/all").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/authors/**", "/api/books/**", "/api/borrows/**").permitAll()
                 // Endpoints específicos para ADMIN
                 .requestMatchers("/api/categories/**").hasRole(SecurityConstants.ROLE_ADMIN)

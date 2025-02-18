@@ -3,7 +3,7 @@ import useAuthStore from '../../services/AuthStore';
 import { getUsernameFromToken } from '../../services/Auth';
 import styles from './ManageAuthors.module.css'
 import Searchbar from '../../components/Searchbar';
-import { AuthorDTO, searchAuthors } from '../../services/AuthorService';
+import { AuthorDTO, deleteAuthor, searchAuthors } from '../../services/AuthorService';
 import stylesTable from './TableStyles.module.css'
 import { useNavigate } from 'react-router-dom';
 
@@ -56,7 +56,7 @@ const ManageAuthors = () => {
                     onClick={() => setCurrentPage(i)}
                     className={`px-4 py-2 mx-1 border rounded ${
                         currentPage === i ? colors.buttonActive : colors.button
-                    }`}
+                    } ${colors.buttonText}`}
                 >
                     {i + 1}
                 </button>
@@ -73,8 +73,19 @@ const ManageAuthors = () => {
     );
     };
 
-    const handleEditClick = (id: number) => {
+    const handleEditClick = (id: number | undefined) => {
         navigate(`/admin/dashboard/author/edit/${id}`);
+    }
+
+    const handleDeleteClick = async (id: number | undefined) => {
+        await deleteAuthor(Number(id));
+        const response = await searchAuthors(searchQuery, currentPage, pageSize);
+        setAuthors(response.content);
+        setTotalPages(response.totalPages);
+    }
+
+    const handleCreateClick = () => {
+        navigate(`/admin/dashboard/author/create`);
     }
 
     const colors = darkTheme
@@ -85,7 +96,8 @@ const ManageAuthors = () => {
         background_1: styles.lightBackground1,
         background_2: styles.lightBackground2,
         background_3: styles.lightBackground3,
-        text: 'text-black'
+        text: 'text-black',
+        buttonText: 'text-white'
     }
     : {
         button: styles.buttonDark,
@@ -95,6 +107,7 @@ const ManageAuthors = () => {
         background_2: styles.darkBackground2,
         background_3: styles.darkBackground3,
         text: 'text-white',
+        buttonText: 'text-black'
     };
 
     return (
@@ -112,7 +125,11 @@ const ManageAuthors = () => {
                 </div>
                 
                 <div className={`w-full p-12 h-[calc(100vh-200px)] overflow-y-auto`}>
-                    <h1 className={`text-3xl font-semibold ml-2 mb-8`}>Authors</h1>
+                    <div className={`flex`}>
+                        <h1 className={`text-3xl font-semibold ml-2 mb-8`}>Authors</h1>
+                        <div className={`flex-grow`}></div>
+                        <button className={`${colors.button} cursor-pointer p-4 rounded text-xl font-semibold mr-40`} onClick={handleCreateClick}>Create New Author</button>
+                    </div>
                     <table className={`shadow-sm ${stylesTable.tableContainer}`}>
                         <thead className={`shadow-sm`}>
                             <th className={`text-2xl text-start ${stylesTable.table_cell_g}`}>ID</th>
@@ -127,8 +144,8 @@ const ManageAuthors = () => {
                                         <td className={`${stylesTable.table_cell_g} text-xl text-start`}>{author.authorId}</td>
                                         <td className={`${stylesTable.table_cell_g} text-xl text-start`}>{author.birthDate}</td>
                                         <td className={`${stylesTable.table_cell_g} text-xl text-start`}>{author.name}</td>
-                                        <td className={`${stylesTable.table_cell_g} text-xl text-start`}><button onClick={(() => handleEditClick(author.authorId))}>Edit</button></td>
-                                        <td className={`${stylesTable.table_cell_g} text-xl text-start`}><button>Delete</button></td>
+                                        <td className={`${stylesTable.table_cell_g} text-xl text-start`}><button className={`${colors.button} cursor-pointer p-2 rounded`} onClick={(() => handleEditClick(author.authorId))}>Edit</button></td>
+                                        <td className={`${stylesTable.table_cell_g} text-xl text-start`}><button className={`${colors.button} cursor-pointer p-2 rounded`} onClick={(() => handleDeleteClick(author.authorId))}>Delete</button></td>
                                     </tr>
                                 ))
                             }

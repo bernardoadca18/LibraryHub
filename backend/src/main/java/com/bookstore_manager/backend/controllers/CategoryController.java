@@ -85,4 +85,12 @@ public class CategoryController {
         Page<CategoryDTO> result = categoryService.searchCategories(name, pageable);
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<Page<CategoryDTO>> findAllPag(
+            @PageableDefault(page = 0, size = 10, sort = "name", direction = Direction.ASC) Pageable pageable) {
+        Page<CategoryDTO> result = categoryService.findAllPag(pageable);
+        return ResponseEntity.ok(result);
+    }
+
 }

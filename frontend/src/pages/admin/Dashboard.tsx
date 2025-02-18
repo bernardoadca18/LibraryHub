@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { getUsernameFromToken } from '../../services/Auth.ts'
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 import useAuthStore from '../../services/AuthStore.ts';
 import styles from './Dashboard.module.css'
 
 const Dashboard = () => {
-    const { isAuthenticated, logout, darkTheme, toggleTheme } = useAuthStore();
+    const { darkTheme, toggleTheme } = useAuthStore();
     
     const [colors, setColors] = useState({
         button: styles.buttonLight,
@@ -59,7 +59,7 @@ const Dashboard = () => {
     <div className={`min-h-screen w-full`}>
         {/* Barra Lateral */}
         <div className={`w-80 fixed inset-y-0 left-0 shadow-xl`}>
-            <nav className={`${colors.background_2} h-full`}>
+            <nav className={`${colors.background_2} h-full flex flex-col`}>
                 <div className={`flex gap-2 p-4 shadow-sm mb-8 ${colors.background_1} h-16`}>
                     <h1 className={`font-semibold text-2xl`}>LibraryHub</h1>
                     <i className={`bi bi-book flex-shrink-0 text-2xl ${''}`}></i>
@@ -88,6 +88,20 @@ const Dashboard = () => {
                     <NavLink to={'/admin/dashboard/book'} className={({ isActive }) => `font-semibold text-2xl p-4 w-9/10 text-center rounded-lg ${colors.button} ${isActive ? colors.buttonActive : ''}`}>
                         Books
                     </NavLink>
+
+                    <NavLink to={'/admin/dashboard/borrow'} className={({ isActive }) => `font-semibold text-2xl p-4 w-9/10 text-center rounded-lg ${colors.button} ${isActive ? colors.buttonActive : ''}`}>
+                        Borrows
+                    </NavLink>
+
+                    <NavLink to={'/admin/dashboard/category'} className={({ isActive }) => `font-semibold text-2xl p-4 w-9/10 text-center rounded-lg ${colors.button} ${isActive ? colors.buttonActive : ''}`}>
+                        Categories
+                    </NavLink>
+                </div>
+                <div className={`flex-grow`}></div>
+                <div className={`${colors.background_1} shadow-lg w-9/10 h-16 self-center mb-3 rounded-2xl p-4 items-center flex`}>
+                    <h1 className={`font-semibold`}>{getUsernameFromToken()}</h1>
+                    <div className={`flex-grow`}></div>
+                    <Link to={'/'}><i className="bi bi-box-arrow-left text-xl"></i></Link>
                 </div>
             </nav>
         </div>

@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -195,5 +197,10 @@ public class BorrowService {
         userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         bookRepository.findById(bookId).orElseThrow(() -> new ResourceNotFoundException("Book not found"));
         return borrowRepository.existsActiveBorrowByUserAndBook(userId, bookId);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BorrowDTO> findAllPag(Pageable pageable) {
+        return borrowRepository.findAll(pageable).map(BorrowDTO::new);
     }
 }

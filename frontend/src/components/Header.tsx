@@ -107,7 +107,7 @@ const Header = () : React.ReactNode => {
     }
 
     useEffect(() => {
-        // Empty effect apenas para disparar re-render
+        
     }, [isAuthenticated]);
 
     return (
@@ -124,11 +124,6 @@ const Header = () : React.ReactNode => {
                                 <>
                                     <Link className={`${colors.text} ${colors.hoverText}`} to={links[1]}>{menus[1]}</Link>
                                     <Link className={`${colors.text} ${colors.hoverText}`} to={links[2]}>{menus[2]}</Link>
-                                    {
-                                        isAdmin ? (
-                                            <Link className={`${colors.text} ${colors.hoverText}`} to={"/admin/dashboard"}>DASHBOARD</Link>
-                                        ) : (<></>)
-                                    }
                                 </>
                             )}
                         </div>
@@ -142,6 +137,11 @@ const Header = () : React.ReactNode => {
                                 {isDropdownOpen && (
                                     <div className={`dropdown-menu show ${colors.dropdownBackground} p-2`} style={{zIndex:1001, display: 'flex', flexDirection: 'column', position: 'absolute', left: 0, justifyContent: 'flex-start'}}>
                                         <Link to={'/profile'}><button className={`dropdown-item cursor-pointer p-2 ${colors.dropdownBorder} ${colors.dropdownHover} ${colors.text}`}>My Account</button></Link>
+                                        {
+                                        isAdmin ? (
+                                            <Link to={"/admin/dashboard"}><button className={`dropdown-item cursor-pointer p-2 ${colors.dropdownBorder} ${colors.dropdownHover} ${colors.text}`}>Dashboard</button></Link>
+                                        ) : (<></>)
+                                        }
                                         <button className={`dropdown-item cursor-pointer p-2 ${colors.dropdownBorder} ${colors.dropdownHover} ${colors.text}`} onClick={handleLogout}>Logout</button>
                                     </div>
                                 )}
