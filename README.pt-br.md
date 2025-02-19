@@ -149,6 +149,3 @@ Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para m
 Criado por bernardoadca18 - Perfil no GitHub
 
 Link do Projeto: https://github.com/bernardoadca18/libraryhub
-
-
-Este README fornece uma visão geral abrangente do projeto, mantendo uma estrutura profissional e organizada. Ele inclui todas as informações necessárias para configuração, desenvolvimento e implantação, destacando as principais funcionalidades e tecnologias utilizadas no projeto.
