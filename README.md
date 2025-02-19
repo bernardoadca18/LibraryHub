@@ -59,17 +59,18 @@ LibraryHub is a comprehensive library management system built with Spring Boot a
 
 ### Environment Variables
 
-Backend
-
+Backend:
+```properties
 APP_PROFILE=dev
 JWT_SECRET=your-secret-key
 JWT_EXPIRATION=86400000
 CORS_ORIGINS=http://localhost:5173,http://localhost:3000
+```
 
-Frontend
-
-Copy code
+Frontend:
+```properties
 VITE_API_URL=http://localhost:8080/api
+```
 
 ### API Documentation
 Once the backend is running, access the OpenAPI documentation at:
@@ -78,13 +79,11 @@ http://localhost:8080/swagger-ui.html
 ### Development Setup
 
 1. Clone the repository
-
 ```bash
 git clone https://github.com/bernardoadca18/libraryhub.git
 cd libraryhub
 ```
 2. Backend Setup
-
 ```bash
 cd backend
 mvn clean install
@@ -92,81 +91,58 @@ mvn spring-boot:run
 ```
 
 3. Frontend Setup
-
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-
 The frontend development server will start at http://localhost:5173
 
 ### Docker Deployment
 
 1. Build the backend Docker image
-
 ```bash
 cd backend
 docker build -t libraryhub-backend .
 ```
 
 2. Build the frontend Docker image
-
 ```bash
 cd frontend
 docker build -t libraryhub-frontend .
 ```
 
 3. Run with Docker Compose
-
 ```bash
 docker-compose up -d
 ```
 
 ### Development Guidelines
 
-Backend Structure
+Backend Structure:
+- `controllers/`: REST API endpoints
+- `services/`: Business logic
+- `repositories/`: Data access layer
+- `models/`: Entity definitions
+- `config/`: Configuration classes
+- `security/`: Security configurations
 
-
-controllers/: REST API endpoints
-
-services/: Business logic
-
-repositories/: Data access layer
-
-models/: Entity definitions
-
-config/: Configuration classes
-
-security/: Security configurations
-
-
-Frontend Structure
-
-
-src/components/: Reusable UI components
-
-src/pages/: Page components
-
-src/services/: API service calls
-
-src/hooks/: Custom React hooks
-
-src/utils/: Utility functions
-
+Frontend Structure:
+- `src/components/`: Reusable UI components
+- `src/pages/`: Page components
+- `src/services/`: API service calls
+- `src/hooks/`: Custom React hooks
+- `src/utils/`: Utility functions
 
 ### Testing
 
-Backend
-
+Backend:
 ```bash
 cd backend
 mvn test
 ```
 
-
-Frontend
-
+Frontend:
 ```bash
 cd frontend
 npm test
@@ -174,17 +150,11 @@ npm test
 
 ### Contributing
 
-
-Fork the repository
-
-Create your feature branch (git checkout -b feature/AmazingFeature)
-
-Commit your changes (git commit -m 'Add some AmazingFeature')
-
-Push to the branch (git push origin feature/AmazingFeature)
-
-Open a Pull Request
-
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ### License
 This project is licensed under the MIT License - see the LICENSE file for details.
@@ -193,3 +163,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 Created by bernardoadca18 - GitHub Profile
 
 Project Link: https://github.com/bernardoadca18/libraryhub
+
