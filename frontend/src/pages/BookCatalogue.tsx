@@ -11,26 +11,39 @@ import { useSearchParams } from 'react-router-dom';
 const BookCatalogue = () : React.ReactNode => {
 
   const Pagination = () => {
+    const maxButtons = 5;
+    const startPage = Math.max(0, currentPage - maxButtons);
+    const endPage = Math.min(totalPages - 1, currentPage + maxButtons);
+  
     return (
       <div className="flex justify-center mt-8">
+        <button onClick={() => setCurrentPage(0)} disabled={currentPage === 0} className="px-4 py-2 mx-1 border rounded disabled:opacity-50">
+          Início
+        </button>
         <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))} disabled={currentPage === 0} className="px-4 py-2 mx-1 border rounded disabled:opacity-50">
           Anterior
         </button>
         
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentPage(i)}
-            className={`px-4 py-2 mx-1 border rounded ${
-              currentPage === i ? 'bg-blue-500 text-white' : ''
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
+        {Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+          const page = startPage + i;
+          return (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`px-4 py-2 mx-1 border rounded ${
+                currentPage === page ? 'bg-blue-500 text-white' : ''
+              }`}
+            >
+              {page + 1}
+            </button>
+          );
+        })}
         
         <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages - 1))} disabled={currentPage === totalPages - 1} className="px-4 py-2 mx-1 border rounded disabled:opacity-50">
           Próximo
+        </button>
+        <button onClick={() => setCurrentPage(totalPages - 1)} disabled={currentPage === totalPages - 1} className="px-4 py-2 mx-1 border rounded disabled:opacity-50">
+          Fim
         </button>
       </div>
     );
@@ -166,6 +179,31 @@ const BookCatalogue = () : React.ReactNode => {
   }, [searchQuery, selectedCategory, selectedAuthor, selectedYear, 
       showAvailableOnly, currentPage, pageSize, bookCount]);
 
+      const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
+        setCurrentPage(0);
+      };
+    
+      const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedCategory(Number(e.target.value) || null);
+        setCurrentPage(0);
+      };
+    
+      const handleAuthorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedAuthor(Number(e.target.value) || null);
+        setCurrentPage(0);
+      };
+    
+      const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedYear(Number(e.target.value) || null);
+        setCurrentPage(0);
+      };
+    
+      const handleAvailabilityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setShowAvailableOnly(e.target.checked);
+        setCurrentPage(0);
+      };
+
   if (loading)
   {
     return (<div></div>);
@@ -178,12 +216,12 @@ const BookCatalogue = () : React.ReactNode => {
           {/* Search Bar */}
           <div className={`mt-16 mb-4 flex flex-col items-center gap-4`}>
             <h1 className={`text-3xl ${colors.text}`}>Search Books</h1>
-            <Searchbar className={''} type='text' placeholder='Search' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}></Searchbar>
+            <Searchbar className={''} type='text' placeholder='Search' value={searchQuery} onChange={handleSearchChange}></Searchbar>
           </div>
           {/* Filters Section */}
           <div className='mb-4 flex flex-wrap gap-4 lg:justify-center lg:items-center pr-8 pl-8'>
             {/* Category Filter */}
-            <select className={`p-2 border rounded ${colors.class}`} value={selectedCategory || ''} onChange={(e) => setSelectedCategory(Number(e.target.value) || null)}>
+            <select className={`p-2 border rounded ${colors.class}`} value={selectedCategory || ''} onChange={handleCategoryChange}>
               <option value="">All Categories</option>
               {categories.map(category => (
                   <option key={category.categoryId} value={category.categoryId}>
@@ -193,7 +231,7 @@ const BookCatalogue = () : React.ReactNode => {
             </select>
     
             {/* Author Filter */}
-            <select value={selectedAuthor || ''} onChange={(e) => setSelectedAuthor(Number(e.target.value) || null)} className={`p-2 border rounded ${colors.class}`} >
+            <select value={selectedAuthor || ''} onChange={handleAuthorChange} className={`p-2 border rounded ${colors.class}`} >
                 <option value="">All Authors</option>
                 {authors.map(author => (
                     <option key={author.authorId} value={author.authorId}>
@@ -203,11 +241,11 @@ const BookCatalogue = () : React.ReactNode => {
             </select>
     
             {/* Year Filter */}
-            <input type="number" placeholder="Publication Year" value={selectedYear || ''} onChange={(e) => setSelectedYear(Number(e.target.value) || null)} className={`p-2 border rounded ${colors.class}`} />
+            <input type="number" placeholder="Publication Year" value={selectedYear || ''} onChange={handleYearChange} className={`p-2 border rounded ${colors.class}`} />
     
             {/* Availability Filter */}
             <label className="flex items-center">
-                <input type="checkbox" checked={showAvailableOnly} onChange={(e) => setShowAvailableOnly(e.target.checked)} className="mr-2"/>
+                <input type="checkbox" checked={showAvailableOnly} onChange={handleAvailabilityChange} className="mr-2"/>
                 Available Only
             </label>
           </div>

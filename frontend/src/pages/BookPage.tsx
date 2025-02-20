@@ -138,7 +138,7 @@ const BookPage = () => {
             </div>
             
             <div className={`p-8 w-full h-dvh ${colors.bgClass2} ${colors.regularText}`}>
-                <img className='w-full h-48 object-cover rounded-t-lg' src={book.coverUrl || ""} alt={`Capa do livro ${book.title}`} />
+                <img className='w-48 h-fit object-cover rounded-t-lg' src={book.coverUrl || ""} alt={`Capa do livro ${book.title}`} />
             </div>
 
             <div className={`flex flex-col p-8 items-center ${colors.bgClass1} ${colors.regularText}`}>

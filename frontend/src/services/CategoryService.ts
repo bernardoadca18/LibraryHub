@@ -32,7 +32,7 @@ export const fetchAllCategories = async (page: number = 0, size: number = 20) =>
             headers: headers,
             params: { page, size },
         });
-        return response.data;
+        return response.data.content;
     } catch (error) {
         console.error('Erro ao buscar todas as categorias:', error);
         throw error;

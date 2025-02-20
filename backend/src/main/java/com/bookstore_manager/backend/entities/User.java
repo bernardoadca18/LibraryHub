@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,6 +38,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
 
@@ -50,7 +53,8 @@ public class User implements UserDetails {
         this.email = email;
         this.phone = phone;
         this.username = username;
-        this.password = new BCryptPasswordEncoder().encode(password);
+        //this.password = new BCryptPasswordEncoder().encode(password);
+        this.password = password;
 
         if (role.toUpperCase().equals("ADMIN")) {
             this.role = UserRole.ADMIN;

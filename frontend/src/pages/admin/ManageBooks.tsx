@@ -39,40 +39,61 @@ const ManageBooks = () => {
     }, [searchQuery, currentPage, pageSize]);
 
 
-    const Pagination = () => {
-    return (
-        <div className="flex justify-center mt-8">
-            <button 
+        const Pagination = () => {
+            const maxButtons = 5; // Número máximo de botões de página a serem exibidos
+            const startPage = Math.max(0, currentPage - Math.floor(maxButtons / 2));
+            const endPage = Math.min(totalPages - 1, startPage + maxButtons - 1);
+        
+            return (
+            <div className="flex justify-center mt-8">
+                <button 
+                onClick={() => setCurrentPage(0)} 
+                disabled={currentPage === 0} 
+                className={`px-4 py-2 mx-1 border rounded disabled:opacity-50 ${colors.button}`}
+                >
+                Start
+                </button>
+                <button 
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))} 
                 disabled={currentPage === 0} 
                 className={`px-4 py-2 mx-1 border rounded disabled:opacity-50 ${colors.button}`}
-            >
-                Anterior
-            </button>
-            
-            {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                    key={i}
-                    onClick={() => setCurrentPage(i)}
-                    className={`px-4 py-2 mx-1 border rounded ${
-                        currentPage === i ? colors.buttonActive : colors.button
-                    } ${colors.buttonText}`}
                 >
-                    {i + 1}
+                Previous
                 </button>
-            ))}
-            
-            <button 
+                
+                {Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+                const page = startPage + i;
+                return (
+                    <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`px-4 py-2 mx-1 border rounded ${
+                        currentPage === page ? colors.buttonActive : colors.button
+                    } ${colors.buttonText}`}
+                    >
+                    {page + 1}
+                    </button>
+                );
+                })}
+                
+                <button 
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages - 1))} 
                 disabled={currentPage === totalPages - 1} 
                 className={`px-4 py-2 mx-1 border rounded disabled:opacity-50 ${colors.button}`}
-            >
-                Próximo
-            </button>
-        </div>
-    );
-    };
-
+                >
+                Next
+                </button>
+                <button 
+                onClick={() => setCurrentPage(totalPages - 1)} 
+                disabled={currentPage === totalPages - 1} 
+                className={`px-4 py-2 mx-1 border rounded disabled:opacity-50 ${colors.button}`}
+                >
+                End
+                </button>
+            </div>
+            );
+        };
+        
     const handleEditClick = (id: number | undefined) => {
         navigate(`/admin/dashboard/book/edit/${id}`);
     }
@@ -163,7 +184,7 @@ const ManageBooks = () => {
                             }
                         </tbody>
                     </table>
-                    <Pagination></Pagination>
+                    <div className={``}><Pagination></Pagination></div>
                 </div>
             </div>
         </div>

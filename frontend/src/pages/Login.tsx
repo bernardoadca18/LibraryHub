@@ -27,7 +27,7 @@ const Login = () : React.ReactNode => {
     {
       const response = await login({
         username,
-        password
+        password: `${password}`
       });
       useAuthStore.getState().login(response.token);
       useAuthStore.getState().initialize();

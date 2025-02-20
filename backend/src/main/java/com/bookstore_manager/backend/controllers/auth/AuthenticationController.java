@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,9 @@ public class AuthenticationController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data) throws AuthenticationException {
         try {
@@ -65,7 +69,16 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body("Email already exists.");
         }
 
-        User newUser = new User(data.name(), data.email(), data.username(), data.password(), "ADMIN", data.phone());
+        String encodedPassword = passwordEncoder.encode(data.password());
+
+        User newUser = new User(
+                data.name(),
+                data.email(),
+                data.username(),
+                encodedPassword,
+                "ADMIN",
+                data.phone()
+        );
 
         this.userRepository.save(newUser);
         return ResponseEntity.ok().build();
@@ -81,7 +94,16 @@ public class AuthenticationController {
                 return ResponseEntity.badRequest().body("Email already exists.");
             }
 
-            User newUser = new User(data.name(), data.email(), data.username(), data.password(), "USER", data.phone());
+            String encodedPassword = passwordEncoder.encode(data.password());
+
+            User newUser = new User(
+                    data.name(),
+                    data.email(),
+                    data.username(),
+                    encodedPassword,
+                    "USER",
+                    data.phone()
+            );
 
             this.userRepository.save(newUser);
             return ResponseEntity.ok().build();

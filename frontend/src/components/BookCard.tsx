@@ -41,7 +41,7 @@ const BookCard = ({ imageUrl, title, author, year, category, availableCopies = 0
                 isAuthenticated ? (
                     <Link to={`/book/${bookId}`}>
                         <div className={`rounded-lg shadow-sm hover:shadow-md transition-shadow border-2 border-slate-100 ${colors.class}`}>
-                            <img className='w-full h-48 object-cover rounded-t-lg' src={imageUrl || ""} alt={`Capa do livro ${title}`} />
+                            <img className='w-full h-fit object-cover rounded-t-lg' src={imageUrl || ""} alt={`Capa do livro ${title}`} />
                             <div className='p-4'>
                                 <h3 className={`font-semibold mb-2 ${colors.titleColor}`}>{title}</h3>
                                 <p className={`text-sm ${colors.authorText} mb-1`}>{author}</p>
@@ -62,8 +62,8 @@ const BookCard = ({ imageUrl, title, author, year, category, availableCopies = 0
                         </div>
                     </Link>
                 ) : (
-                    <div className={`rounded-lg shadow-sm hover:shadow-md transition-shadow border-2 border-slate-100 ${colors.class}`}>
-                        <img className='w-full h-48 object-cover rounded-t-lg' src={imageUrl || ""} alt={`Capa do livro ${title}`} />
+                    <div className={`w-48 rounded-lg shadow-sm hover:shadow-md transition-shadow border-2 border-slate-100 ${colors.class}`}>
+                        <img className='w-full h-fit object-cover rounded-t-lg' src={imageUrl || ""} alt={`Capa do livro ${title}`} />
                         <div className='p-4'>
                             <h3 className={`font-semibold mb-2 ${colors.titleColor}`}>{title}</h3>
                             <p className={`text-sm ${colors.authorText} mb-1`}>{author}</p>
