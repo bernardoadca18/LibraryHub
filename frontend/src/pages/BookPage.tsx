@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {  BookData, fetchBookById } from '../services/BookService.ts';
 import { createBorrow, checkActiveBorrow, BorrowDTO, fetchActiveUserBorrows, returnBorrow } from '../services/BorrowService.ts';
@@ -56,7 +56,7 @@ const BookPage = () => {
             };
     
             await createBorrow(borrowData);
-            const updatedBook = await fetchBookById(book.bookId);
+            const updatedBook = await fetchBookById(book.bookId!);
             setBook(updatedBook);
         } catch (err) {
             setError('Error borrowing book. Please try again.');
@@ -85,7 +85,7 @@ const BookPage = () => {
             if (isAuthenticated && book) {
                 try {
                     const userId = await getUserIdFromToken();
-                    const isBorrowed = await checkActiveBorrow(userId, book.bookId);
+                    const isBorrowed = await checkActiveBorrow(userId, book.bookId!);
                     setHasActiveBorrow(isBorrowed);
                     
                     // Buscar ID do empréstimo ativo
@@ -113,7 +113,7 @@ const BookPage = () => {
         try {
             setError('');
             await returnBorrow(activeBorrowId);
-            const updatedBook = await fetchBookById(book.bookId);
+            const updatedBook = await fetchBookById(book.bookId!);
             setBook(updatedBook);
             setHasActiveBorrow(false);
         } catch (err) {

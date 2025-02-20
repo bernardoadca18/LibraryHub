@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: libraryhub-db
+    environment:
+      POSTGRES_DB: libraryhub
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 02040638
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./create.sql:/docker-entrypoint-initdb.d/create.sql
+    networks:
+      - libraryhub-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: libraryhub-pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - libraryhub-network
+
+  orm-demo:
+    build:
+      context: ./demo-orm
+    container_name: libraryhub-orm-demo
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:02040638@postgres:5432/librarydb
+    networks:
+      - libraryhub-network
+
+  backend:
+    build:
+      context: ./backend
+    container_name: libraryhub-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL: jdbc:postgresql://postgres:5432/librarydb
+      DB_USERNAME: postgres
+      DB_PASSWORD: 02040638
+    depends_on:
+      - postgres
+      - orm-demo
+    networks:
+      - libraryhub-network
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: libraryhub-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:8080/api
+    depends_on:
+      - backend
+    networks:
+      - libraryhub-network
+
+networks:
+  libraryhub-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

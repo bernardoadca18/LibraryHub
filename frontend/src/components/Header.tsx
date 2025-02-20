@@ -4,7 +4,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.min'
 import "bootstrap-icons/font/bootstrap-icons.css"
 import useAuthStore from '../services/AuthStore.ts'
 import { getUsernameFromToken } from '../services/Auth.ts'
-import useIsAdmin from '../hooks/userIsAdmin.ts'
 import { fetchUserByUsername } from '../services/UserService.ts'
 const menus = ['HOME', 'BOOKS']
 const links = ['/', '/catalogue']

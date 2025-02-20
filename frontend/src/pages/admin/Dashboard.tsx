@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getUsernameFromToken } from '../../services/Auth.ts'
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import useAuthStore from '../../services/AuthStore.ts';

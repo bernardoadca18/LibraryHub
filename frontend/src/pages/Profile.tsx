@@ -11,8 +11,6 @@ const Profile = () => {
     const [userBorrows, setUserBorrows] = useState<BorrowDTO[]>([]);
     const [booksData, setBooksData] = useState<BookData[]>([]);
     const { darkTheme } = useAuthStore();
-
-
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
@@ -124,12 +122,12 @@ const Profile = () => {
                                         <div className={`rounded-lg shadow-sm hover:shadow-md transition-shadow border-2 border-slate-100 p-2 w-64 ${colors.class}`}>
                                             {book && (
                                                 <BookCard
-                                                    bookId={book.bookId}
+                                                    bookId={book.bookId!}
                                                     imageUrl={book.coverUrl}
                                                     title={book.title}
-                                                    author={book.authorName}
+                                                    author={book.authorName!}
                                                     year={book.publishYear}
-                                                    category={book.categoryName}
+                                                    category={book.categoryName!}
                                                     availableCopies={book.availableCopies}
                                                     darkTheme={darkTheme}
                                                 />

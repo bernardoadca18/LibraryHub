@@ -255,7 +255,7 @@ const BookCatalogue = () : React.ReactNode => {
         {/* Books Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5  gap-4 mt-144 p-8">
             {books.map((book) => (
-                <BookCard bookId={book.bookId} key={book.bookId} imageUrl={book.coverUrl} title={book.title} author={book.authorName} year={book.publishYear} category={book.categoryName} availableCopies={book.availableCopies} darkTheme={darkTheme} />
+                <BookCard bookId={book.bookId!} key={book.bookId} imageUrl={book.coverUrl} title={book.title} author={book.authorName!} year={book.publishYear} category={book.categoryName!} availableCopies={book.availableCopies} darkTheme={darkTheme} />
             ))}
         </div>
       </div>

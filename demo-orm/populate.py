@@ -1,10 +1,12 @@
 import json
+import os
 from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base, Category, Author, Book
 
-DATABASE_URL = 'postgresql://postgres:02040638@localhost:5432/librarydb'
+# DATABASE_URL = 'postgresql://postgres:02040638@localhost:5432/librarydb' # DEV
+DATABASE_URL = os.getenv('DATABASE_URL') # PROD
 SAMPLE_COVER_URL= 'https://i.ibb.co/4RMzQK1S/samplebook.png'
 engine  = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)

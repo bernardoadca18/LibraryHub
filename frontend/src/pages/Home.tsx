@@ -116,12 +116,12 @@ const Home = () : React.ReactNode => {
                         {Array.isArray(topRatedBooks) && topRatedBooks.map((book : BookData, index : number) => (
                             <div key={index} className='flex-shrink-0 w-48'>
                                 <BookCard
-                                    bookId={book.bookId} 
+                                    bookId={book.bookId!} 
                                     imageUrl={book.coverUrl || '/public/default-book-cover.png'} 
                                     title={book.title} 
-                                    author={book.authorName} 
+                                    author={book.authorName!} 
                                     year={book.publishYear} 
-                                    category={book.categoryName}
+                                    category={book.categoryName!}
                                     darkTheme={darkTheme}
                                 />
                             </div>
