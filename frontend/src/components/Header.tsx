@@ -5,16 +5,18 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import useAuthStore from '../services/AuthStore.ts'
 import { getUsernameFromToken } from '../services/Auth.ts'
 import useIsAdmin from '../hooks/userIsAdmin.ts'
+import { fetchUserByUsername } from '../services/UserService.ts'
 const menus = ['HOME', 'BOOKS']
 const links = ['/', '/catalogue']
 
 const Header = () : React.ReactNode => {
     const { isAuthenticated, logout, darkTheme, toggleTheme } = useAuthStore();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
-    const isAdmin = useIsAdmin();
+    
 
     // Estado para as cores
     const [colors, setColors] = useState({
@@ -107,7 +109,23 @@ const Header = () : React.ReactNode => {
     }
 
     useEffect(() => {
+
+        const checkAdminStatus = async () => {
+
+            if (isAuthenticated) {
+                try {
+                    const username = getUsernameFromToken();
+                    const user = await fetchUserByUsername(username);
+                    setIsAdmin(user.role === 'ADMIN');
+                } catch (error) {
+                    console.error('Error checking admin status:', error);
+                    setIsAdmin(false);
+                }
+            }
+        };
         
+        checkAdminStatus();
+
     }, [isAuthenticated]);
 
     return (

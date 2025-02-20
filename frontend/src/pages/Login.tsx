@@ -32,6 +32,7 @@ const Login = () : React.ReactNode => {
       useAuthStore.getState().login(response.token);
       useAuthStore.getState().initialize();
 
+      window.dispatchEvent(new Event('storage'));
       navigate('/', { state: { successMessage: 'Login succesful' } });
     }
     catch (error)
