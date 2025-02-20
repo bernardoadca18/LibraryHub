@@ -5,7 +5,7 @@ services:
     image: postgres:latest
     container_name: libraryhub-db
     environment:
-      POSTGRES_DB: libraryhub
+      POSTGRES_DB: librarydb
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 02040638
     ports:
