@@ -46,6 +46,7 @@ LibraryHub é um sistema abrangente de gerenciamento de biblioteca construído c
 - React 18.3.1
 - TypeScript
 - Axios para comunicação com API
+- TailwindCSS para estilização e design responsivo
 - Bootstrap para estilização
 - Zustand para gerenciamento de estado
 
