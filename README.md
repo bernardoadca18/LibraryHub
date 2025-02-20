@@ -80,7 +80,7 @@ http://localhost:8080/swagger-ui.html
 
 1. Clone the repository
 ```bash
-git clone https://github.com/bernardoadca18/libraryhub.git
+git clone https://github.com/bernardoadca18/LibraryHub.git
 cd libraryhub
 ```
 2. Backend Setup
