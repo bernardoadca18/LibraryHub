@@ -46,6 +46,7 @@ LibraryHub is a comprehensive library management system built with Spring Boot a
 - React 18.3.1
 - TypeScript
 - Axios for API communication
+- TailwindCSS for styling and responsive design
 - Bootstrap for styling
 - Zustand for state management
 
