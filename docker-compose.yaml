@@ -9,11 +9,17 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 02040638
     ports:
-      - "5433:5433"
+      - "5433:5432"
     volumes:
+      - postgres_data:/var/lib/postgresql/data
       - ./create.sql:/docker-entrypoint-initdb.d/create.sql
     networks:
       - libraryhub-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   pgadmin:
     image: dpage/pgadmin4
@@ -47,12 +53,14 @@ services:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      DB_URL: jdbc:postgresql://postgres:5433/librarydb
+      DB_URL: jdbc:postgresql://postgres:5432/librarydb
       DB_USERNAME: postgres
       DB_PASSWORD: 02040638  
     depends_on:
-      - postgres
-      - orm-demo
+      postgres:
+        condition: service_healthy
+      orm-demo:
+        condition: service_completed_successfully
     networks:
       - libraryhub-network
 
@@ -61,7 +69,7 @@ services:
       context: ./frontend
     container_name: libraryhub-frontend
     ports:
-      - "5173:5173"
+      - "80:80"
     environment:
       VITE_API_URL: http://localhost:8080/api
     depends_on:
