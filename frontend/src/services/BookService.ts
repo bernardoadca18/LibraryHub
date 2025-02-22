@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { getToken, isTokenValid } from './Auth.ts';
-
-const API_BASE_URL = 'http://localhost:8080/api/books';
+import { API_BASE_URL } from './Api.ts';
 
 export interface BookData {
     bookId?: number;
@@ -23,7 +22,7 @@ export const fetchBooks = async (page: number = 0, size: number = 20)  => {
     {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(`${API_BASE_URL}`, {
+        const response = await axios.get(`${API_BASE_URL}/books`, {
             params: { page, size },
             headers: headers
         });
@@ -44,7 +43,7 @@ export const fetchBooksCount = async () => {
 
     try
     {
-        const response = await axios.get(`${API_BASE_URL + endpoint}`, {
+        const response = await axios.get(`${API_BASE_URL + "/books" + endpoint}`, {
             headers: { 'Content-Type': 'application/json', }
         });
         return response.data;
@@ -62,7 +61,7 @@ export const fetchBookById = async (id: number) => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(`${API_BASE_URL}/id/${id}`, 
+        const response = await axios.get(`${API_BASE_URL}/books/id/${id}`, 
             {
                 headers: headers
             }
@@ -80,7 +79,7 @@ export const fetchBooksByCategory = async (categoryId: number) => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(`${API_BASE_URL}/category/${categoryId}`, {
+        const response = await axios.get(`${API_BASE_URL}/books/category/${categoryId}`, {
             headers:headers
         });
         return response.data;
@@ -95,7 +94,7 @@ export const fetchBooksByAuthor = async (authorId: number) => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(`${API_BASE_URL}/author/${authorId}`, {
+        const response = await axios.get(`${API_BASE_URL}/books/author/${authorId}`, {
             headers:headers
         });
         return response.data;
@@ -110,7 +109,7 @@ export const createBook = async (bookData: BookData) => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.post(API_BASE_URL, bookData, {
+        const response = await axios.post(`${API_BASE_URL}/books`, bookData, {
             headers: headers
         });
         return response.data;
@@ -125,7 +124,7 @@ export const updateBook = async (id: number, bookData: Partial<BookData>) => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.put(`${API_BASE_URL}/id/${id}`, bookData, {
+        const response = await axios.put(`${API_BASE_URL}/books/id/${id}`, bookData, {
             headers: headers
         });
         return response.data;
@@ -140,7 +139,7 @@ export const deleteBook = async (id: number) => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        await axios.delete(`${API_BASE_URL}/id/${id}`, {
+        await axios.delete(`${API_BASE_URL}/books/id/${id}`, {
             headers: headers
         });
     } catch (error) {
@@ -154,7 +153,7 @@ export const searchBooks = async (title: string, page: number = 0, size: number 
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(`${API_BASE_URL}/search`, {
+        const response = await axios.get(`${API_BASE_URL}/books/search`, {
             params: { title, page, size },
             headers: headers
         });
@@ -170,7 +169,7 @@ export const fetchBookStatistics = async () => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(`${API_BASE_URL}/stats`,{
+        const response = await axios.get(`${API_BASE_URL}/books/stats`,{
             headers: headers
         });
         return response.data;
@@ -183,7 +182,7 @@ export const fetchBookStatistics = async () => {
 // Não precisa de autenticação
 export async function fetchTopRatedBooks(page: number, size: number) {
     try {
-        const response = await axios.get('http://localhost:8080/api/books/top-borrowed', {
+        const response = await axios.get(`${API_BASE_URL}/books/top-borrowed`, {
             params: {
                 page: page,
                 size: size

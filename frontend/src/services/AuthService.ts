@@ -1,8 +1,7 @@
 import axios from 'axios';
 import api from './Api.ts';
 import { storeToken } from './Auth.ts';
-
-const API_BASE_URL = 'http://localhost:8080/api/auth';
+import { API_BASE_URL } from './Api.ts';
 
 export interface LoginData {
     username: string;
@@ -24,7 +23,7 @@ export interface LoginResponse {
 
 export const login = async (loginData: LoginData): Promise<LoginResponse> => {
     try {
-        const response = await api.post(`${API_BASE_URL}/login`, loginData, {
+        const response = await api.post(`${API_BASE_URL}/auth/login`, loginData, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -50,7 +49,7 @@ export const login = async (loginData: LoginData): Promise<LoginResponse> => {
 // Registro de novo administrador
 export const register = async (registerData: RegisterData): Promise<void> => {
     try {
-        await axios.post(`${API_BASE_URL}/register`, registerData, {
+        await axios.post(`${API_BASE_URL}/auth/register`, registerData, {
             headers : {
                 "Content-Type": "application/json",
                 "Accept" : "application/json"
@@ -68,7 +67,7 @@ export const register = async (registerData: RegisterData): Promise<void> => {
 
 export const registerUser = async (registerData: RegisterData): Promise<void> => {
     try {
-        await axios.post(`${API_BASE_URL}/register-user`, registerData, {
+        await axios.post(`${API_BASE_URL}/auth/register-user`, registerData, {
             headers : {
                 "Content-Type": "application/json",
                 "Accept" : "application/json"

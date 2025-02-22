@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { getToken, isTokenValid } from './Auth.ts';
-
-const API_BASE_URL = 'http://localhost:8080/api/categories';
+import { API_BASE_URL } from './Api.ts';
 
 export interface CategoryData {
     categoryId?: number;
@@ -13,7 +12,7 @@ export const fetchCategoryById = async (id: number) => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(`${API_BASE_URL}/id/${id}`, {
+        const response = await axios.get(`${API_BASE_URL}/categories/id/${id}`, {
             headers:headers
         });
         return response.data;
@@ -28,7 +27,7 @@ export const fetchAllCategories = async (page: number = 0, size: number = 20) =>
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(`${API_BASE_URL}/all`, {
+        const response = await axios.get(`${API_BASE_URL}/categories/all`, {
             headers: headers,
             params: { page, size },
         });
@@ -44,7 +43,7 @@ export const fetchBooksByCategory = async (categoryId: number) => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(`${API_BASE_URL}/id/${categoryId}/books`, {
+        const response = await axios.get(`${API_BASE_URL}/categories/id/${categoryId}/books`, {
             headers: headers
         });
         return response.data;
@@ -59,7 +58,7 @@ export const fetchCategoryCount = async () => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(`${API_BASE_URL}/count`, {
+        const response = await axios.get(`${API_BASE_URL}/categories/count`, {
             headers: headers
         });
         return response.data;
@@ -74,7 +73,7 @@ export const createCategory = async (categoryData: CategoryData) => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.post(API_BASE_URL, categoryData, {
+        const response = await axios.post(`${API_BASE_URL}/categories`, categoryData, {
             headers: headers
         });
         return response.data;
@@ -89,7 +88,7 @@ export const updateCategory = async (id: number, categoryData: Partial<CategoryD
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.put(`${API_BASE_URL}/id/${id}`, categoryData, {
+        const response = await axios.put(`${API_BASE_URL}/categories/id/${id}`, categoryData, {
             headers: headers
         });
         return response.data;
@@ -104,7 +103,7 @@ export const deleteCategory = async (id: number) => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ?  {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        await axios.delete(`${API_BASE_URL}/id/${id}`, {
+        await axios.delete(`${API_BASE_URL}/categories/id/${id}`, {
             headers: headers
         });
     } catch (error) {

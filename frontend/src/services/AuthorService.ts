@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { getToken, isTokenValid } from './Auth.ts';
-
-const API_BASE_URL = 'http://localhost:8080/api/authors';
+import { API_BASE_URL } from './Api.ts';
 
 export interface AuthorDTO {
     authorId?: number;
@@ -14,7 +13,7 @@ export const fetchAuthorById = async (id: number) => {
     try {
         const token = getToken();
         const headers = token ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(`${API_BASE_URL}/id/${id}`, {
+        const response = await axios.get(`${API_BASE_URL}/authors/id/${id}`, {
             headers: headers
         });
         return response.data;
@@ -29,7 +28,7 @@ export const fetchAllAuthors = async () => {
     try {
         const token = getToken();
         const headers = token ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(API_BASE_URL, {
+        const response = await axios.get(`${API_BASE_URL}/authors`, {
             headers: headers
         });
         return response.data;
@@ -44,7 +43,7 @@ export const fetchBooksByAuthor = async (authorId: number) => {
     try {
         const token = getToken();
         const headers = token ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(`${API_BASE_URL}/id/${authorId}/books`, {
+        const response = await axios.get(`${API_BASE_URL}/authors/id/${authorId}/books`, {
             headers: headers
         });
         return response.data;
@@ -59,7 +58,7 @@ export const fetchAuthorCount = async () => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(`${API_BASE_URL}/count`, {
+        const response = await axios.get(`${API_BASE_URL}/authors/count`, {
             headers: headers
         });
         return response.data;
@@ -74,7 +73,7 @@ export const createAuthor = async (authorData: AuthorDTO) => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.post(API_BASE_URL, authorData, {
+        const response = await axios.post(`${API_BASE_URL}/authors`, authorData, {
             headers: headers
         });
         return response.data;
@@ -89,7 +88,7 @@ export const updateAuthor = async (id: number, authorData: Partial<AuthorDTO>) =
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.put(`${API_BASE_URL}/id/${id}`, authorData, {
+        const response = await axios.put(`${API_BASE_URL}/authors/id/${id}`, authorData, {
             headers: headers
         });
         return response.data;
@@ -104,7 +103,7 @@ export const deleteAuthor = async (id: number) => {
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        await axios.delete(`${API_BASE_URL}/id/${id}`, {
+        await axios.delete(`${API_BASE_URL}/authors/id/${id}`, {
             headers: headers
         });
     } catch (error) {
@@ -118,7 +117,7 @@ export const searchAuthors = async (name: string, page: number = 0, size: number
     try {
         const token = getToken();
         const headers = token && isTokenValid(token) ? {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'} : {};
-        const response = await axios.get(`${API_BASE_URL}/search`, {
+        const response = await axios.get(`${API_BASE_URL}/authors/search`, {
             params: { name, page, size },
             headers: headers
         });
