@@ -19,6 +19,8 @@ export const fetchUserByUsername = async (username: string) => {
             ? { Authorization: `Bearer ${token}` } 
             : {};
         
+        console.log("token : ", token);
+
         const response = await axios.get(`${API_BASE_URL}/users/username/${username}`, {
             headers
         });

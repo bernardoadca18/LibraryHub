@@ -107,10 +107,13 @@ public class BookService {
 
     // CREATE
     @Transactional
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value = "books", allEntries = true)
     public BookDTO create(BookDTO dto) {
         Book entity = new Book();
+
         copyDtoToEntity(dto, entity);
+        entity.setAvailableCopies(dto.getAvailableCopies());
+        entity.setBorrowCount(0);
         entity = bookRepository.save(entity);
         return new BookDTO(entity);
     }

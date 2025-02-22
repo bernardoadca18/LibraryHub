@@ -1,7 +1,6 @@
 package com.bookstore_manager.backend.infra.security;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +37,8 @@ public class TokenService {
             Token tokenEntity = new Token();
             tokenEntity.setToken(token);
             tokenEntity.setUsername(user.getUsername());
-            tokenEntity.setCreatedAt(LocalDateTime.now());
-            tokenEntity.setExpiresAt(genExpirationDate().atOffset(ZoneOffset.of("-03:00")).toLocalDateTime());
+            tokenEntity.setCreatedAt(Instant.now().atOffset(ZoneOffset.UTC).toLocalDateTime());
+            tokenEntity.setExpiresAt(genExpirationDate().atOffset(ZoneOffset.UTC).toLocalDateTime());
             tokenEntity.setRevoked(false);
             tokenEntity.setExpired(false);
 
@@ -63,7 +62,6 @@ public class TokenService {
 
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
-                    .withIssuer("library-hub")
                     .build()
                     .verify(token)
                     .getSubject();
@@ -73,6 +71,7 @@ public class TokenService {
     }
 
     private Instant genExpirationDate() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        // return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.systemDefault().getRules().getOffset(Instant.now()));
+        return Instant.now().plusSeconds(7200);
     }
 }

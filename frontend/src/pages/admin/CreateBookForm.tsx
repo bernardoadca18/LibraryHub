@@ -37,7 +37,7 @@ const CreateBookForm = () : React.ReactNode => {
 			categoryId: Number(categoryId),
 			publishYear: Number(publishYear),
 			availableCopies: Number(availableCopies),
-			borrowCount: Number(borrowCount),
+			borrowCount: 0,
 			coverUrl: coverUrl
 		} );
 		navigate('/admin/dashboard/book')

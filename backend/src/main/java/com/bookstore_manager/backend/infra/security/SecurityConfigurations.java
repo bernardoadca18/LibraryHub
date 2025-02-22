@@ -21,8 +21,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
-import com.bookstore_manager.backend.infra.security.SecurityConstants;
-import com.bookstore_manager.backend.infra.security.SecurityFilter;
 
 @Configuration
 @EnableWebSecurity

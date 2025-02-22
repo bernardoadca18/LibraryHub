@@ -4,23 +4,11 @@ import { getToken, isTokenValid, removeToken } from './Auth.ts';
 export const API_BASE_URL = "http://localhost:8080/api";
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080/api',
+    baseURL: API_BASE_URL,
     headers: {
-    'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
     },
 });
-
-api.interceptors.response.use(
-    response => response,
-    error => {
-    if (error.response?.status === 401) {
-      // Token expirado ou inválido
-        removeToken();
-        window.location.href = '/login';
-    }
-    return Promise.reject(error);
-    }
-);
 
 api.interceptors.request.use(config => {
     const token = getToken();

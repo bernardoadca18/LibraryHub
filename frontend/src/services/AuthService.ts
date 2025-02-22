@@ -1,5 +1,6 @@
 import axios from 'axios';
 import api from './Api.ts';
+import { storeToken } from './Auth.ts';
 
 const API_BASE_URL = 'http://localhost:8080/api/auth';
 
@@ -21,21 +22,25 @@ export interface LoginResponse {
     token: string;
 }
 
-// Login de usuário
 export const login = async (loginData: LoginData): Promise<LoginResponse> => {
     try {
         const response = await api.post(`${API_BASE_URL}/login`, loginData, {
-        headers: {
-            "Content-Type": "application/json",
-            "Accept" : "application/json"
-        }});
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        });
 
+        if (response.data.token) {
+            storeToken(response.data.token);
+            console.log('Token armazenado:', response.data.token);
+        }
 
         return response.data;
     } catch (error) {
         if (axios.isAxiosError(error)) {
             const serverMessage = error.response?.data?.message || 'Erro desconhecido no servidor';
-            throw new Error(`Erro no registro: ${serverMessage}`);
+            throw new Error(`Erro no login: ${serverMessage}`);
         }
         console.error('Erro no login:', error);
         throw error;

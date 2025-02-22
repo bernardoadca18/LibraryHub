@@ -1,9 +1,17 @@
 import { fetchUserByUsername } from "./UserService.ts";
 
 export const storeToken = (token: string): void => {
-    localStorage.setItem('authToken', token);
+    if (!token) {
+        console.error('Tentativa de armazenar token vazio');
+        return;
+    }
+    try {
+        localStorage.setItem('authToken', token);
+        console.log('Token armazenado com sucesso');
+    } catch (error) {
+        console.error('Erro ao armazenar token:', error);
+    }
 };
-
 export const getToken = (): string | null => {
     return localStorage.getItem('authToken');
 };
