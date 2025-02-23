@@ -59,8 +59,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      orm-demo:
-        condition: service_completed_successfully
     networks:
       - libraryhub-network
 
@@ -69,7 +67,7 @@ services:
       context: ./frontend
     container_name: libraryhub-frontend
     ports:
-      - "80:80"
+      - "3000:3000"
     environment:
       VITE_API_URL: http://localhost:8080/api
     depends_on:
