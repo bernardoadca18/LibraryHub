@@ -5,4 +5,4 @@ COPY src ./src
 RUN mvn clean install
 EXPOSE 8080
 
-ENTRYPOINT [ "java", "-jar", "target/*.jar" ]
+ENTRYPOINT [ "java", "-jar", "target/backend-1.0.1.jar" ]
