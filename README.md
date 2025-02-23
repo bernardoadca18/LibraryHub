@@ -24,12 +24,16 @@ LibraryHub is a comprehensive library management system built with Spring Boot a
 
 ## Features
 
-- 📚 Complete book inventory management
+- 📚 Complete book inventory management with real-time tracking
 - 🔍 Advanced search functionality by title, author, and category
-- 👥 User authentication and authorization
-- 📊 Statistical insights and reporting
-- 📱 Responsive modern UI
+- 👥 User authentication and authorization with JWT
+- 📊 Statistical insights and reporting with dynamic dashboards
+- 📱 Responsive modern UI with TailwindCSS and Bootstrap
 - 🔐 Secure API endpoints with JWT authentication
+- 📖 Book borrowing and return management
+- 📈 Most borrowed books tracking
+- 👤 User profile management
+- 🔄 Real-time availability updates
 
 ## Technology Stack
 
@@ -38,17 +42,54 @@ LibraryHub is a comprehensive library management system built with Spring Boot a
 - Spring Boot 3.4.1
 - Spring Security with JWT
 - JPA/Hibernate
-- H2 Database (Development)
-- PostgreSQL (Production)
+- PostgreSQL (Both Development and Production)
 - OpenAPI Documentation
+- Caching implementation for improved performance
+- Transaction management
 
 ### Frontend
 - React 18.3.1
 - TypeScript
-- Axios for API communication
+- Axios for API communication with interceptors
 - TailwindCSS for styling and responsive design
-- Bootstrap for styling
+- Bootstrap for additional UI components
 - Zustand for state management
+- JWT token management
+- Error handling and validation
+
+## Docker Configuration
+
+### Services
+- PostgreSQL Database
+- pgAdmin for database management
+- Backend Spring Boot application
+- Frontend React application
+- ORM demo service
+
+### Environment Configuration
+
+Backend:
+```properties
+SPRING_PROFILES_ACTIVE=prod
+DB_URL=jdbc:postgresql://postgres:5432/librarydb
+DB_USERNAME=postgres
+DB_PASSWORD=your-password
+JWT_SECRET=your-secret-key
+JWT_EXPIRATION=86400000
+CORS_ORIGINS=http://localhost:3000
+```
+
+Frontend:
+```properties
+VITE_API_URL=http://localhost:8080/api
+```
+
+Database:
+```properties
+POSTGRES_DB=librarydb
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your-password
+```
 
 ## Installation
 
@@ -101,22 +142,39 @@ The frontend development server will start at http://localhost:5173
 
 ### Docker Deployment
 
-1. Build the backend Docker image
+1. Configure environment variables in docker-compose.yaml
 ```bash
-cd backend
-docker build -t libraryhub-backend .
+
 ```
 
-2. Build the frontend Docker image
+2. Build and run with Docker Compose
 ```bash
-cd frontend
-docker build -t libraryhub-frontend .
-```
-
-3. Run with Docker Compose
-```bash
+cd LibraryHub
+docker-compose build
 docker-compose up -d
 ```
+
+Services will be available at:
+-Frontend: http://localhost:3000
+-Backend API: http://localhost:8080
+-pgAdmin: http://localhost:5050
+-Database: localhost:5433
+
+### API Services
+
+Book Service
+-Book inventory management
+-Search and filtering
+-Availability tracking
+-Borrowing statistics
+-Category and author management
+
+User Service
+-User management
+-Authentication and authorization
+-Profile management
+-Role-based access control
+
 
 ### Development Guidelines
 
@@ -131,9 +189,10 @@ Backend Structure:
 Frontend Structure:
 - `src/components/`: Reusable UI components
 - `src/pages/`: Page components
-- `src/services/`: API service calls
+- `src/services/`: API service calls with authentication
 - `src/hooks/`: Custom React hooks
 - `src/utils/`: Utility functions
+- `src/auth/`: Authentication and token management
 
 ### Testing
 
