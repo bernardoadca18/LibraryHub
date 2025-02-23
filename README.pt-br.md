@@ -10,45 +10,87 @@
 ███████╗██║██████╔╝██║  ██║██║  ██║██║  ██║   ██║   ██║  ██║╚██████╔╝██████╔╝
 ╚══════╝╚═╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═════╝
 ---------------------------------------------------------------------------
-Um Sistema Moderno de Gerenciamento de Biblioteca Full-Stack
+Um Sistema Moderno de Gerenciamento de Bibliotecas Full-Stack
 </pre>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Licença: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.1-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![React](https://img.shields.io/badge/React-18.3.1-blue.svg)](https://reactjs.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Latest-blue.svg)](https://www.postgresql.org/)
 
 </div>
 
-LibraryHub é um sistema abrangente de gerenciamento de biblioteca construído com Spring Boot e React, projetado para otimizar o gerenciamento de inventário de livros e processos de empréstimo.
+LibraryHub é um sistema abrangente de gerenciamento de bibliotecas desenvolvido com Spring Boot e React, projetado para otimizar o gerenciamento de inventário de livros e os processos de empréstimo.
 
-## Funcionalidades
+## Recursos
 
-- 📚 Gerenciamento completo do inventário de livros
-- 🔍 Funcionalidade avançada de busca por título, autor e categoria
-- 👥 Autenticação e autorização de usuários
-- 📊 Relatórios estatísticos e insights
-- 📱 Interface moderna e responsiva
-- 🔐 Endpoints seguros com autenticação JWT
+- 📚 Gerenciamento completo do inventário de livros com rastreamento em tempo real
+- 🔍 Funcionalidade avançada de pesquisa por título, autor e categoria
+- 👥 Autenticação e autorização de usuários com JWT
+- 📊 Insights estatísticos e relatórios com dashboards dinâmicos
+- 📱 Interface moderna responsiva com TailwindCSS e Bootstrap
+- 🔐 Endpoints de API seguros com autenticação JWT
+- 📖 Gerenciamento de empréstimo e devolução de livros
+- 📈 Rastreamento dos livros mais emprestados
+- 👤 Gerenciamento de perfil de usuário
+- 🔄 Atualizações de disponibilidade em tempo real
 
-## Stack Tecnológico
+## Tech Stack
 
 ### Backend
 - Java 21
 - Spring Boot 3.4.1
 - Spring Security com JWT
 - JPA/Hibernate
-- H2 Database (Desenvolvimento)
-- PostgreSQL (Produção)
+- PostgreSQL (Desenvolvimento e Produção)
+- H2 Database (Testes)
 - Documentação OpenAPI
+- Implementação de caching para melhor desempenho
+- Gerenciamento de transações
 
 ### Frontend
 - React 18.3.1
 - TypeScript
-- Axios para comunicação com API
+- Axios para comunicação com API com interceptors
 - TailwindCSS para estilização e design responsivo
-- Bootstrap para estilização
+- Bootstrap para componentes adicionais de UI
 - Zustand para gerenciamento de estado
+- Gerenciamento de token JWT
+- Tratamento de erros e validação
+
+## Configuração com Docker
+
+### Serviços
+- Banco de Dados PostgreSQL
+- pgAdmin para gerenciamento do banco de dados
+- Aplicação backend Spring Boot
+- Aplicação frontend React
+- Serviço de demonstração ORM
+
+### Configuração de Ambiente
+
+Backend:
+```properties
+SPRING_PROFILES_ACTIVE=prod
+DB_URL=jdbc:postgresql://postgres:5432/librarydb
+DB_USERNAME=postgres
+DB_PASSWORD=sua-senha
+JWT_SECRET=sua-chave-secreta
+JWT_EXPIRATION=86400000
+CORS_ORIGINS=http://localhost:3000
+```
+
+Frontend:
+```properties
+VITE_API_URL=http://localhost:8080/api
+```
+
+Banco de Dados:
+```properties
+POSTGRES_DB=librarydb
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=sua-senha
+```
 
 ## Instalação
 
@@ -58,7 +100,7 @@ LibraryHub é um sistema abrangente de gerenciamento de biblioteca construído c
 - Docker (para deploy em produção)
 - Maven
 
-### Variáveis de Ambiente
+### Configuração de Variáveis de Ambiente
 
 Backend:
 ```properties
@@ -74,7 +116,7 @@ VITE_API_URL=http://localhost:8080/api
 ```
 
 ### Documentação da API
-Após iniciar o backend, acesse a documentação OpenAPI em:
+Com o backend em execução, acesse a documentação OpenAPI em:
 http://localhost:8080/swagger-ui.html
 
 ### Configuração para Desenvolvimento
@@ -97,71 +139,44 @@ cd frontend
 npm install
 npm run dev
 ```
-O servidor de desenvolvimento do frontend iniciará em http://localhost:5173
+O servidor de desenvolvimento iniciará em http://localhost:5173
 
-### Implantação com Docker
+### Deploy com Docker
 
-1. Construa a imagem Docker do backend
+1. Configure as variáveis de ambiente no docker-compose.yaml
+
+2. Compile e execute com Docker Compose
 ```bash
-cd backend
-docker build -t libraryhub-backend .
-```
-
-2. Construa a imagem Docker do frontend
-```bash
-cd frontend
-docker build -t libraryhub-frontend .
-```
-
-3. Execute com Docker Compose
-```bash
+cd LibraryHub
+docker-compose build
 docker-compose up -d
 ```
 
-### Diretrizes de Desenvolvimento
+Os serviços estarão disponíveis em:
+- Frontend: http://localhost:3000
+- API Backend: http://localhost:8080
+- pgAdmin: http://localhost:5050
+- Banco de Dados: localhost:5433
 
-Estrutura do Backend:
-- `controllers/`: Endpoints da API REST
-- `services/`: Lógica de negócios
-- `repositories/`: Camada de acesso aos dados
-- `models/`: Definições de entidade
-- `config/`: Classes de configuração
-- `security/`: Configurações de segurança
+### Serviços da API
 
-Estrutura do Frontend:
-- `src/components/`: Componentes reutilizáveis da UI
-- `src/pages/`: Componentes de página
-- `src/services/`: Chamadas de serviço da API
-- `src/hooks/`: Hooks personalizados do React
-- `src/utils/`: Funções utilitárias
+Serviço de Livros
+- Gerenciamento de inventário de livros
+- Pesquisa e filtragem
+- Rastreamento de disponibilidade
+- Estatísticas de empréstimos
+- Gerenciamento de categorias e autores
 
-### Testes
-
-Backend:
-```bash
-cd backend
-mvn test
-```
-
-Frontend:
-```bash
-cd frontend
-npm test
-```
-
-### Contribuindo
-
-1. Faça um fork do repositório
-2. Crie sua branch de funcionalidade (`git checkout -b feature/MinhaFuncionalidade`)
-3. Faça commit das suas alterações (`git commit -m 'Adicionar MinhaFuncionalidade'`)
-4. Faça push para a branch (`git push origin feature/MinhaFuncionalidade`)
-5. Abra um Pull Request
+Serviço de Usuários
+- Gerenciamento de usuários
+- Autenticação e autorização
+- Gerenciamento de perfis
+- Controle de acesso baseado em funções
 
 ### Licença
 Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para mais detalhes.
 
 ### Meta
-Criado por bernardoadca18 - Perfil no GitHub
+Criado por bernardoadca18 - Perfil GitHub
 
 Link do Projeto: https://github.com/bernardoadca18/libraryhub
-
