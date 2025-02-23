@@ -43,6 +43,7 @@ LibraryHub is a comprehensive library management system built with Spring Boot a
 - Spring Security with JWT
 - JPA/Hibernate
 - PostgreSQL (Both Development and Production)
+- H2 Database (Test)
 - OpenAPI Documentation
 - Caching implementation for improved performance
 - Transaction management
